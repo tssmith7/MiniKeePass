@@ -99,7 +99,7 @@ static DatabaseManager *sharedInstance;
         passwordViewController.cancelPressed = ^(FormViewController *formViewController) {
             [formViewController dismissViewControllerAnimated:YES completion:nil];
         };
-        
+     
         // Create a default keyfile name from the database name
         keyFile = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"key"];
         
@@ -111,9 +111,11 @@ static DatabaseManager *sharedInstance;
             passwordViewController.keyFileCell.selectedIndex = 0;
         }
         
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:passwordViewController];
+//        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:passwordViewController];
         
-        [appDelegate.window.rootViewController presentViewController:navigationController animated:animated completion:nil];
+//        [appDelegate.window.rootViewController presentViewController:navigationController animated:animated completion:nil];
+        appDelegate.splitViewController.collapseToPrimary = NO;
+        [appDelegate.splitViewController pushDetailViewController:passwordViewController animated:YES];
     }
 }
 
@@ -159,11 +161,16 @@ static DatabaseManager *sharedInstance;
         }
 
         // Dismiss the view controller, and after animation set the database document
+        MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
+        [appDelegate.splitViewController popDetailViewControllerAnimated:YES];
+        appDelegate.databaseDocument = dd;
+/*
         [passwordViewController dismissViewControllerAnimated:YES completion:^{
             // Set the database document in the application delegate
             MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
             appDelegate.databaseDocument = dd;
         }];
+ */
     } @catch (NSException *exception) {
         NSLog(@"%@", exception);
         [passwordViewController showErrorMessage:exception.reason];

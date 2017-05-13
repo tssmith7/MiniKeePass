@@ -19,7 +19,7 @@
 #import "GroupViewController.h"
 #import "SettingsViewController.h"
 #import "DBOptionsViewController.h"
-#import "EntryViewController.h"
+#import "SplitViewController.h"
 #import "AppSettings.h"
 #import "DatabaseManager.h"
 #import "KeychainUtils.h"
@@ -29,7 +29,8 @@
 @interface MiniKeePassAppDelegate ()
 
 @property (nonatomic, strong) FilesViewController *filesViewController;;
-@property (nonatomic, strong) UINavigationController *navigationController;
+// @property (nonatomic, strong) UINavigationController *primaryNavController;
+// @property (nonatomic, strong) UINavigationController *secondaryNavController;
 
 @end
 
@@ -40,13 +41,23 @@
 
     // Create the files view
     self.filesViewController = [[FilesViewController alloc] initWithStyle:UITableViewStylePlain];
-
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.filesViewController];
-    self.navigationController.toolbarHidden = NO;
-
+/*
+    self.primaryNavController = [[UINavigationController alloc] initWithRootViewController:self.filesViewController];
+    self.primaryNavController.toolbarHidden = NO;
+    self.secondaryNavController = [[UINavigationController alloc] init];
+    self.secondaryNavController.toolbarHidden = YES;
+*/
+    // Create a split view controller.
+    self.splitViewController = [[SplitViewController alloc] init];
+    [self.splitViewController pushViewController:self.filesViewController animated:NO];
+    self.splitViewController.collapseToPrimary = YES;
+    
+//    self.splitViewController.delegate = self;
+//    self.splitViewController.viewControllers = @[self.primaryNavController, self.secondaryNavController];
+    
     // Create the window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
+    self.window.rootViewController = self.splitViewController;
     [self.window makeKeyAndVisible];
 
     // Add a pasteboard notification listener to support clearing the clipboard
@@ -91,7 +102,7 @@
 }
 
 + (MiniKeePassAppDelegate *)appDelegate {
-    return [[UIApplication sharedApplication] delegate];
+    return (MiniKeePassAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 + (NSString *)documentsDirectory {
@@ -140,13 +151,19 @@
     // Create and push on the root group view controller
     GroupViewController *groupViewController = [[GroupViewController alloc] initWithGroup:_databaseDocument.kdbTree.root];
     groupViewController.title = [[_databaseDocument.filename lastPathComponent] stringByDeletingPathExtension];
+
+    /*
+    KdbEntry *entry = (KdbEntry*)_databaseDocument.kdbTree.root.entries[0];
+    EntryViewController *entryViewController = [[EntryViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    entryViewController.entry = entry;
+*/
     
-    [self.navigationController pushViewController:groupViewController animated:YES];
+    [self.splitViewController pushViewController:groupViewController animated:YES];
 }
 
 - (void)closeDatabase {
     // Close any open database views
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    [self.splitViewController ];
     
     _databaseDocument = nil;
 }
@@ -262,6 +279,7 @@
     UINavigationController *settingsNavController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     
     [self.window.rootViewController presentViewController:settingsNavController animated:YES completion:nil];
+    [self.splitViewController showDetailViewController:settingsNavController sender:self];
 }
 
 - (void)dismissSettingsView {
@@ -274,7 +292,7 @@
         
     UINavigationController *settingsNavController = [[UINavigationController alloc] initWithRootViewController:viewController];
     
-    [self.window.rootViewController presentViewController:settingsNavController animated:YES completion:nil];
+    [self.splitViewController showDetailViewController:settingsNavController sender:self];
 }
 
 @end

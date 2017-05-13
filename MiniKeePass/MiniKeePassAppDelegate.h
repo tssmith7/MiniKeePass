@@ -17,11 +17,13 @@
 
 #import <UIKit/UIKit.h>
 #import "FilesViewController.h"
+#import "SplitViewController.h"
 #import "DatabaseDocument.h"
 
 @interface MiniKeePassAppDelegate : NSObject <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
+@property (nonatomic, strong) SplitViewController *splitViewController;
 @property (nonatomic, strong) DatabaseDocument *databaseDocument;
 
 + (MiniKeePassAppDelegate *)appDelegate;
@@ -32,6 +34,11 @@
 - (void)closeDatabase;
 - (void)deleteKeychainData;
 - (void)deleteAllData;
+
+/*
+- (void)showSplitView:(UIViewController*)viewController canBeSecondary:(BOOL) secondary;
+- (void)removeSplitView:(UIViewController*)viewController;
+*/
 
 - (void)showSettingsView;
 - (void)dismissSettingsView;

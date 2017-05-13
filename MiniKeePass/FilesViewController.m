@@ -17,6 +17,7 @@
 
 #import "MiniKeePassAppDelegate.h"
 #import "FilesViewController.h"
+#import "InfoViewController.h"
 #import "HelpViewController.h"
 #import "DatabaseManager.h"
 #import "DropboxManager.h"
@@ -35,6 +36,7 @@ enum {
 
 @interface FilesViewController ()
 @property (nonatomic, strong) FilesInfoView *filesInfoView;
+@property (nonatomic, strong) InfoViewController *infoDetailViewController;
 @property (nonatomic, strong) NSMutableArray *databaseFiles;
 @property (nonatomic, strong) NSMutableArray *keyFiles;
 @property (nonatomic, strong) NSMutableArray *dropboxFiles;
@@ -68,6 +70,11 @@ enum {
     UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                             target:nil
                                                                             action:nil];
+
+    self.infoDetailViewController = [[InfoViewController alloc] init];
+//    self.infoViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    [appDelegate.splitViewController pushDetailViewController:self.infoDetailViewController animated:YES];
+    appDelegate.splitViewController.collapseToPrimary = YES;
 
     self.toolbarItems = [NSArray arrayWithObjects:settingsButton, spacer, helpButton, spacer, addButton, nil];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -281,8 +288,10 @@ enum {
     // Show the help view if there are no files and no dropbox status
     if (databaseCount == 0 && keyCount == 0 && dropboxCount == 0 && self.dropbox_status == nil) {
         [self displayInfoView];
+        self.infoDetailViewController.label.text = NSLocalizedString(@"Tap the + button to add a new KeePass file.", nil);
     } else {
         [self hideInfoView];
+        self.infoDetailViewController.label.text = NSLocalizedString(@"Select a database.", nil);
     }
 
     return n;
@@ -487,23 +496,29 @@ enum {
 }
 
 - (void)addPressed:(UIBarButtonItem *)source {
+    MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
     NewKdbViewController *newKdbViewController = [[NewKdbViewController alloc] init];
     newKdbViewController.donePressed = ^(FormViewController *formViewController) {
         [self createNewDatabase:(NewKdbViewController *)formViewController];
     };
     newKdbViewController.cancelPressed = ^(FormViewController *formViewController) {
-        [formViewController dismissViewControllerAnimated:YES completion:nil];
+        [appDelegate.splitViewController popDetailViewControllerAnimated:YES];
     };
 
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:newKdbViewController];
-    [self presentViewController:navigationController animated:YES completion:nil];
+//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:newKdbViewController];
+//    [self presentViewController:navigationController animated:YES completion:nil];
+
+    [appDelegate.splitViewController pushDetailViewController:newKdbViewController animated:YES];
 }
 
 - (void)helpPressed {
     HelpViewController *helpViewController = [[HelpViewController alloc] init];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:helpViewController];
 
-    [self presentViewController:navigationController animated:YES completion:nil];
+//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:helpViewController];
+//    [self presentViewController:navigationController animated:YES completion:nil];
+
+    MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
+    [appDelegate.splitViewController pushDetailViewController:helpViewController animated:YES];
 }
 
 - (void)createNewDatabase:(NewKdbViewController *)newKdbViewController {

@@ -40,6 +40,8 @@
         nameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         nameTextField.placeholder = NSLocalizedString(@"Name", nil);
         nameTextField.returnKeyType = UIReturnKeyNext;
+        nameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        nameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         nameTextField.delegate = self;
         
         passwordTextField1 = [[UITextField alloc] init];
@@ -61,7 +63,7 @@
         passwordTextField2.delegate = self;
 
         versionSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Version 1.x", nil), NSLocalizedString(@"Version 2.x", nil), nil]];
-        versionSegmentedControl.selectedSegmentIndex = 0;
+        versionSegmentedControl.selectedSegmentIndex = 1;
         versionSegmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.navigationItem.titleView = versionSegmentedControl;
         

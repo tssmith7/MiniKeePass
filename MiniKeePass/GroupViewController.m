@@ -280,7 +280,8 @@ enum {
 - (void)pushViewControllerForGroup:(KdbGroup *)group {
     GroupViewController *groupViewController = [[GroupViewController alloc] initWithGroup:group];
 
-    [self.navigationController pushViewController:groupViewController animated:YES];
+//    [self.navigationController pushViewController:groupViewController animated:YES];
+    [self.appDelegate.splitViewController pushViewController:groupViewController animated:YES];
 }
 
 - (void)pushViewControllerForEntry:(KdbEntry *)entry {
@@ -288,7 +289,8 @@ enum {
     entryViewController.entry = entry;
     entryViewController.title = entry.title;
 
-    [self.navigationController pushViewController:entryViewController animated:YES];
+//    [self.navigationController pushViewController:entryViewController animated:YES];
+    [self.appDelegate.splitViewController pushDetailViewController:entryViewController animated:YES];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
