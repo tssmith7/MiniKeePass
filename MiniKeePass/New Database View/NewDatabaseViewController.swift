@@ -21,9 +21,9 @@ class NewDatabaseViewController: UITableViewController {
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var versionSegmentedControl: UISegmentedControl!
 
-    var donePressed: ((newDatabaseViewController: NewDatabaseViewController, url: NSURL, password: String, version: Int) -> Void)?
+    var donePressed: ((_ newDatabaseViewController: NewDatabaseViewController, _ url: URL, _ password: String, _ version: Int) -> Void)?
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         nameTextField.becomeFirstResponder()
@@ -31,7 +31,7 @@ class NewDatabaseViewController: UITableViewController {
     
     // MARK: - UITextFieldDelegate
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if (textField == nameTextField) {
             passwordTextField.becomeFirstResponder()
         } else if (textField == passwordTextField) {
@@ -44,7 +44,7 @@ class NewDatabaseViewController: UITableViewController {
     
     // MARK: - Actions
 
-    @IBAction func donePressedAction(sender: UIBarButtonItem?) {
+    @IBAction func donePressedAction(_ sender: UIBarButtonItem?) {
         // Check to make sure the name was supplied
         let name = nameTextField.text
         if (name == nil || name!.isEmpty) {
@@ -66,27 +66,34 @@ class NewDatabaseViewController: UITableViewController {
 
         // Create a URL to the file
         var version: Int
-        var url = MiniKeePassAppDelegate.documentsDirectoryUrl()
-        url = url.URLByAppendingPathComponent(name!)
+        var url = MiniKeePassAppDelegate.documentsDirectoryUrl()!
+        url = url.appendingPathComponent(name!)
         if (versionSegmentedControl.selectedSegmentIndex == 0) {
             version = 1
-            url = url.URLByAppendingPathExtension("kdb")
+            url = url.appendingPathExtension("kdb")
         } else {
             version = 2
-            url = url.URLByAppendingPathExtension("kdbx")
+            url = url.appendingPathExtension("kdbx")
         }
 
         // Check if the file already exists
-        if (url.checkResourceIsReachableAndReturnError(nil)) {
+        var isReachable: Bool = true
+        do {
+            isReachable = try url.checkPromisedItemIsReachable()
+        } catch {
+            isReachable = false;
+        }
+        
+        if( isReachable ) {
             presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("A file already exists with this name", comment: ""))
             return
         }
 
         // Notify the listener
-        donePressed?(newDatabaseViewController: self, url: url, password: password1!, version: version)
+        donePressed?(self, url, password1!, version)
     }
     
-    @IBAction func cancelPressed(sender: UIBarButtonItem) {
-        dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
 }

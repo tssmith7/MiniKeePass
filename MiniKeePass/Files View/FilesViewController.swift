@@ -18,72 +18,84 @@
 import UIKit
 
 class FilesViewController: UITableViewController {
-    private let databaseReuseIdentifier = "DatabaseCell"
-    private let keyFileReuseIdentifier = "KeyFileCell"
+    fileprivate let databaseReuseIdentifier = "DatabaseCell"
+    fileprivate let dropboxReuseIdentifier = "DropboxCell"
+    fileprivate let keyFileReuseIdentifier = "KeyFileCell"
 
-    private enum Section : Int {
-        case Databases = 0
-        case KeyFiles = 1
+    fileprivate enum Section : Int {
+        case databases = 0
+        case keyFiles = 1
+        case dropboxFiles = 2
 
-        static let AllValues = [Section.Databases, Section.KeyFiles]
+        static let AllValues = [Section.databases, Section.keyFiles, Section.dropboxFiles]
     }
 
     var databaseFiles: [String] = []
     var keyFiles: [String] = []
+    var dropboxFiles: [String] = []
+    var dropboxStatus: String!
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-
-        let databaseManager = DatabaseManager.sharedInstance()
+    override func viewWillAppear(_ animated: Bool) {
+        let databaseManager = DatabaseManager.sharedInstance()!
         databaseFiles = databaseManager.getDatabases() as! [String]
         keyFiles = databaseManager.getKeyFiles() as! [String]
-        
+        if( AppSettings.sharedInstance().dropboxEnabled() ) {
+            self.loadDropboxFiles()
+        }
         tableView.reloadData()
+        
+        super.viewWillAppear(animated)
     }
 
     // MARK: - Empty State
 
     func toggleEmptyState() {
-        if (databaseFiles.count == 0 && keyFiles.count == 0) {
+        if (databaseFiles.count == 0 && keyFiles.count == 0 && dropboxFiles.count == 0 && dropboxStatus == nil ) {
             let emptyStateLabel = UILabel()
             emptyStateLabel.text = NSLocalizedString("Tap the + button to add a new KeePass file.", comment: "")
-            emptyStateLabel.textAlignment = .Center
-            emptyStateLabel.textColor = UIColor.grayColor()
+            emptyStateLabel.textAlignment = .center
+            emptyStateLabel.textColor = UIColor.gray
             emptyStateLabel.numberOfLines = 0
-            emptyStateLabel.lineBreakMode = .ByWordWrapping
+            emptyStateLabel.lineBreakMode = .byWordWrapping
 
             tableView.backgroundView = emptyStateLabel
-            tableView.separatorStyle = .None
+            tableView.separatorStyle = .none
         } else {
             tableView.backgroundView = nil
-            tableView.separatorStyle = .SingleLine
+            tableView.separatorStyle = .singleLine
         }
     }
 
     // MARK: - UITableView data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.AllValues.count
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Section.AllValues[section] {
-        case .Databases:
+        case .databases:
             return NSLocalizedString("Databases", comment: "")
-        case .KeyFiles:
+        case .keyFiles:
             return NSLocalizedString("Key Files", comment: "")
+        case .dropboxFiles:
+            return NSLocalizedString("Dropbox", comment: "")
         }
     }
 
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // Hide the section titles if there are no files in a section
         switch Section.AllValues[section] {
-        case .Databases:
+        case .databases:
             if (databaseFiles.count == 0) {
                 return 0
             }
-        case .KeyFiles:
+        case .keyFiles:
             if (keyFiles.count == 0) {
+                return 0
+            }
+        case .dropboxFiles:
+            if (dropboxFiles.count == 0 && dropboxStatus == nil) {
                 return 0
             }
         }
@@ -91,158 +103,268 @@ class FilesViewController: UITableViewController {
         return UITableViewAutomaticDimension
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         toggleEmptyState()
 
         switch Section.AllValues[section] {
-        case .Databases:
+        case .databases:
             return databaseFiles.count
-        case .KeyFiles:
+        case .keyFiles:
             return keyFiles.count
+        case .dropboxFiles:
+            return dropboxFiles.count
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section:Int) -> CGFloat {
+    
+        switch Section.AllValues[section] {
+        case .dropboxFiles:
+            if( dropboxStatus == nil ) {
+                return 0
+            }
+            let font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
+            return font.lineHeight + 3
+        default:
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        switch Section.AllValues[section] {
+        case .dropboxFiles:
+            if( dropboxStatus == nil ) {
+                return nil
+            }
+            let font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
+            let footer = UILabel()
+            footer.font = font;
+            footer.textColor = UIColor.red
+            footer.backgroundColor = UIColor.clear
+            footer.text = "    " + dropboxStatus
+            return footer
+        default:
+            return nil
+        }
+    }
+        
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell
         let filename: String
 
         // Get the cell and filename
         switch Section.AllValues[indexPath.section] {
-        case .Databases:
-            cell = tableView.dequeueReusableCellWithIdentifier(databaseReuseIdentifier, forIndexPath: indexPath)
+        case .databases:
+            cell = tableView.dequeueReusableCell(withIdentifier: databaseReuseIdentifier, for: indexPath)
             filename = databaseFiles[indexPath.row]
-        case .KeyFiles:
-            cell = tableView.dequeueReusableCellWithIdentifier(keyFileReuseIdentifier, forIndexPath: indexPath)
+        case .keyFiles:
+            cell = tableView.dequeueReusableCell(withIdentifier: keyFileReuseIdentifier, for: indexPath)
             filename = keyFiles[indexPath.row]
+        case .dropboxFiles:
+            cell = tableView.dequeueReusableCell(withIdentifier: dropboxReuseIdentifier, for: indexPath)
+            filename = dropboxFiles[indexPath.row]
         }
 
         cell.textLabel!.text = filename
+        
+        // Get the file's modification date
+        let databaseManager = DatabaseManager.sharedInstance()!
+        var date: Date!
+        if( indexPath.section == Section.databases.rawValue ) {
+            // Get the file's last modification time
+            let url = databaseManager.getFileUrl(filename)
+            date = databaseManager.getFileLastModificationDate(url)
+        } else {
+            let dropboxManager = DropboxManager.sharedInstance()!
+            date = dropboxManager.getDropboxFileModifiedDate(filename)
+        }
+        
+        if( date != nil ) {
 
-        // Get the file's last modification time
-        let databaseManager = DatabaseManager.sharedInstance()
-        let url = databaseManager.getFileUrl(filename)
-        let date = databaseManager.getFileLastModificationDate(url)
-
-        // Format the last modified time as the subtitle of the cell
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = .ShortStyle
-        dateFormatter.timeStyle = .ShortStyle
-        cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + dateFormatter.stringFromDate(date)
+            // Format the last modified time as the subtitle of the cell
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            dateFormatter.timeStyle = .short
+            cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + dateFormatter.string(from: date)
+        } else {
+            cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + "(-)"
+        }
 
         return cell
     }
 
     // MARK: - UITableView delegate
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        // Load the database
-        let databaseManager = DatabaseManager.sharedInstance()
-        databaseManager.openDatabaseDocument(databaseFiles[indexPath.row], animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch Section.AllValues[indexPath.section] {
+        case .databases:
+            // Load the database
+            let databaseManager = DatabaseManager.sharedInstance()!
+            databaseManager.openDatabaseDocument(databaseFiles[indexPath.row], animated: true, dropbox: false)
+            break
+        case .dropboxFiles:
+            // Download the dropbox database and load
+            self.downloadDropboxFile(dropboxFiles[indexPath.row])
+            break
+        case .keyFiles:
+            break
+            /* Do nothing */
+        }
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: .Destructive, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             self.deleteRowAtIndexPath(indexPath)
         }
         
-        let renameAction = UITableViewRowAction(style: .Normal, title: NSLocalizedString("Rename", comment: "")) { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+        let renameAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Rename", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             self.renameRowAtIndexPath(indexPath)
         }
         
         switch Section.AllValues[indexPath.section] {
-        case .Databases:
+        case .databases:
             return [deleteAction, renameAction]
-        case .KeyFiles:
+        case .keyFiles:
             return [deleteAction]
+        case .dropboxFiles:
+            return nil
         }
     }
     
-    func renameRowAtIndexPath(indexPath: NSIndexPath) {
+    func renameRowAtIndexPath(_ indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "RenameDatabase", bundle: nil)
         let navigationController = storyboard.instantiateInitialViewController() as! UINavigationController
         
         let viewController = navigationController.topViewController as! RenameDatabaseViewController
-        viewController.donePressed = { (renameDatabaseViewController: RenameDatabaseViewController, originalUrl: NSURL, newUrl: NSURL) in
-            let databaseManager = DatabaseManager.sharedInstance()
+        viewController.donePressed = { (renameDatabaseViewController: RenameDatabaseViewController, originalUrl: URL, newUrl: URL) in
+            let databaseManager = DatabaseManager.sharedInstance()!
             databaseManager.renameDatabase(originalUrl, newUrl: newUrl)
             
             // Update the filename in the files list
-            self.databaseFiles[indexPath.row] = newUrl.lastPathComponent!
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            self.databaseFiles[indexPath.row] = newUrl.lastPathComponent
+            self.tableView.reloadRows(at: [indexPath], with: .fade)
             
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
         
-        let databaseManager = DatabaseManager.sharedInstance()
+        let databaseManager = DatabaseManager.sharedInstance()!
         viewController.originalUrl = databaseManager.getFileUrl(databaseFiles[indexPath.row])
         
-        presentViewController(navigationController, animated: true, completion: nil)
+        present(navigationController, animated: true, completion: nil)
     }
     
-    func deleteRowAtIndexPath(indexPath: NSIndexPath) {
+    func deleteRowAtIndexPath(_ indexPath: IndexPath) {
         // Get the filename to delete
         let filename: String
         switch Section.AllValues[indexPath.section] {
-        case .Databases:
-            filename = databaseFiles.removeAtIndex(indexPath.row)
-        case .KeyFiles:
-            filename = keyFiles.removeAtIndex(indexPath.row)
+        case .databases:
+            filename = databaseFiles.remove(at: indexPath.row)
+        case .keyFiles:
+            filename = keyFiles.remove(at: indexPath.row)
+        case .dropboxFiles:
+            return
         }
         
         // Delete the file
-        let databaseManager = DatabaseManager.sharedInstance()
+        let databaseManager = DatabaseManager.sharedInstance()!
         databaseManager.deleteFile(filename)
         
         // Update the table
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        tableView.deleteRows(at: [indexPath], with: .fade)
     }
 
     // MARK: - Actions
 
-    @IBAction func settingsPressed(sender: UIBarButtonItem?) {
+    @IBAction func settingsPressed(_ sender: UIBarButtonItem?) {
         let storyboard = UIStoryboard(name: "Settings", bundle: nil)
         let viewController = storyboard.instantiateInitialViewController()!
 
-        presentViewController(viewController, animated: true, completion: nil)
+        present(viewController, animated: true, completion: nil)
     }
 
-    @IBAction func helpPressed(sender: UIBarButtonItem?) {
+    @IBAction func helpPressed(_ sender: UIBarButtonItem?) {
         let storyboard = UIStoryboard(name: "Help", bundle: nil)
         let viewController = storyboard.instantiateInitialViewController()!
 
-        presentViewController(viewController, animated: true, completion: nil)
+        present(viewController, animated: true, completion: nil)
     }
 
-    @IBAction func addPressed(sender: UIBarButtonItem?) {
+    @IBAction func addPressed(_ sender: UIBarButtonItem?) {
         let storyboard = UIStoryboard(name: "NewDatabase", bundle: nil)
         let navigationController = storyboard.instantiateInitialViewController() as! UINavigationController
 
         let viewController = navigationController.topViewController as! NewDatabaseViewController
-        viewController.donePressed = { (newDatabaseViewController: NewDatabaseViewController, url: NSURL, password: String, version: Int) -> Void in
+        viewController.donePressed = { (newDatabaseViewController: NewDatabaseViewController, url: URL, password: String, version: Int) -> Void in
             // Create the new database
-            let databaseManager = DatabaseManager.sharedInstance()
+            let databaseManager = DatabaseManager.sharedInstance()!
             databaseManager.newDatabase(url, password: password, version: version)
             
             // Add the file to the list of files
-            let filename = url.lastPathComponent!
+            let filename = url.lastPathComponent
             let index = self.databaseFiles.insertionIndexOf(filename) {
-                $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending
+                $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending
             }
-            self.databaseFiles.insert(filename, atIndex: index)
+            self.databaseFiles.insert(filename, at: index)
             
             // Notify the table of the new row
             if (self.databaseFiles.count == 1) {
                 // Reload the section if it was previously empty
-                let indexSet = NSIndexSet(index: Section.Databases.rawValue)
-                self.tableView.reloadSections(indexSet, withRowAnimation: .Right)
+                let indexSet = IndexSet(integer: Section.databases.rawValue)
+                self.tableView.reloadSections(indexSet, with: .right)
             } else {
-                let indexPath = NSIndexPath(forRow: index, inSection: Section.Databases.rawValue)
-                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+                let indexPath = IndexPath(row: index, section: Section.databases.rawValue)
+                self.tableView.insertRows(at: [indexPath], with: .right)
             }
 
-            newDatabaseViewController.dismissViewControllerAnimated(true, completion: nil)
+            newDatabaseViewController.dismiss(animated: true, completion: nil)
         }
 
-        presentViewController(navigationController, animated: true, completion: nil)
+        present(navigationController, animated: true, completion: nil)
+    }
+    
+    func loadDropboxFilesCallback(_ error: Error? ) -> Void {
+        if( error != nil ) {
+            print(error!)
+            dropboxStatus = error!.localizedDescription
+        } else {
+            dropboxFiles = DropboxManager.sharedInstance().getDropboxFileList() as! [String]
+            if( dropboxFiles.count == 0 ) {
+                dropboxStatus = "No Files Found"
+            } else {
+                dropboxStatus = nil;
+            }
+        }
+        // Update the dropbox file list on the main execution thread...
+        DispatchQueue.main.async() { [unowned self] () -> Void in
+            self.tableView.reloadData()
+        }
+    }
+
+    func loadDropboxFiles() {
+        dropboxFiles = []
+        dropboxStatus = "Loading ...";
+        
+        // This function returns immediately and then calls the Callback function
+        // when the file list has been retrieved from Dropbox.
+        DropboxManager.sharedInstance().loadDropboxFileList( loadDropboxFilesCallback )
+
+        // Show loading... status footer
+        tableView.reloadData()
+    }
+    
+    func downloadDropboxFile(_ path: String) {
+    
+        DropboxManager.sharedInstance().downloadDropboxFile(path, requestCallback:{ [unowned self] (error: Error?) -> Void in
+            if( error != nil ) {
+                print(error!)
+                self.dropboxStatus = error!.localizedDescription
+                self.tableView.reloadData()
+            } else {
+                // Load the database
+                self.dropboxStatus = nil;
+                DatabaseManager.sharedInstance().openDatabaseDocument(path, animated:true, dropbox:true )
+            }
+        })
     }
 }

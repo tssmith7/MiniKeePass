@@ -15,4 +15,5 @@
 #import "Kdb4Writer.h"
 #import "Kdb4Node.h"
 #import "DatabaseManager.h"
+#import "DropboxManager.h"
 #import "EntryViewController.h"

@@ -16,9 +16,11 @@
  */
 
 #import "DatabaseManager.h"
+#import "DropboxManager.h"
 #import "MiniKeePassAppDelegate.h"
 #import "KeychainUtils.h"
 #import "AppSettings.h"
+#import "DropboxDocument.h"
 #import "MiniKeePass-Swift.h"
 
 @implementation DatabaseManager
@@ -43,6 +45,9 @@ static DatabaseManager *sharedInstance;
     // Get the document's directory
     NSString *documentsDirectory = [MiniKeePassAppDelegate documentsDirectory];
 
+    // get the dropbox temp directory
+    NSString *dropbox_dir = [[DropboxManager sharedInstance] getLocalPath:@""];
+
     // Get the contents of the documents directory
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *dirContents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:nil];
@@ -51,10 +56,10 @@ static DatabaseManager *sharedInstance;
     for (NSString *file in dirContents) {
         NSString *path = [documentsDirectory stringByAppendingPathComponent:file];
 
-        // Check if it's a directory
+        // Check if it's a directory and make sure it is not the dropbox temp directory
         BOOL dir = NO;
         [fileManager fileExistsAtPath:path isDirectory:&dir];
-        if (!dir) {
+        if (!dir && ![file containsString:dropbox_dir] ) {
             NSString *extension = [[file pathExtension] lowercaseString];
             if ([extension isEqualToString:@"kdb"] || [extension isEqualToString:@"kdbx"]) {
                 [files addObject:file];
@@ -175,10 +180,15 @@ static DatabaseManager *sharedInstance;
     }
 }
 
-- (void)openDatabaseDocument:(NSString*)filename animated:(BOOL)animated {
+- (void)openDatabaseDocument:(NSString*)filename animated:(BOOL)animated dropbox:(BOOL)isDropbox {
     BOOL databaseLoaded = NO;
-
-    self.selectedFilename = filename;
+    
+    if( isDropbox ) {
+        self.selectedFilename = [[[DropboxManager sharedInstance] getDropboxTempDir]
+                                 stringByAppendingPathComponent:filename ];
+    } else {
+        self.selectedFilename = filename;
+    }
 
     // Get the application delegate
     MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
@@ -205,8 +215,12 @@ static DatabaseManager *sharedInstance;
 
         // Load the database
         @try {
-            DatabaseDocument *dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
-
+            DatabaseDocument *dd;
+            if( isDropbox ) {
+                dd = [[DropboxDocument alloc] initWithFilename:path password:password keyFile:keyFilePath ];
+            } else {
+                dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+            }
             databaseLoaded = YES;
 
             // Set the database document in the application delegate
@@ -224,7 +238,7 @@ static DatabaseManager *sharedInstance;
 
         PasswordEntryViewController *passwordEntryViewController = (PasswordEntryViewController *)navigationController.topViewController;
         passwordEntryViewController.donePressed = ^(PasswordEntryViewController *passwordEntryViewController) {
-            [self openDatabaseWithPasswordEntryViewController:passwordEntryViewController];
+            [self openDatabaseWithPasswordEntryViewController:passwordEntryViewController dropbox:isDropbox];
         };
         passwordEntryViewController.cancelPressed = ^(PasswordEntryViewController *passwordEntryViewController) {
             [passwordEntryViewController dismissViewControllerAnimated:YES completion:nil];
@@ -240,7 +254,7 @@ static DatabaseManager *sharedInstance;
     }
 }
 
-- (void)openDatabaseWithPasswordEntryViewController:(PasswordEntryViewController *)passwordEntryViewController {
+- (void)openDatabaseWithPasswordEntryViewController:(PasswordEntryViewController *)passwordEntryViewController dropbox:(BOOL)isDropbox {
     NSString *documentsDirectory = [MiniKeePassAppDelegate documentsDirectory];
     NSString *path = [documentsDirectory stringByAppendingPathComponent:self.selectedFilename];
 
@@ -261,7 +275,13 @@ static DatabaseManager *sharedInstance;
     // Load the database
     @try {
         // Open the database
-        DatabaseDocument *dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+        DatabaseDocument *dd;
+        if( isDropbox ) {
+            dd = [[DropboxDocument alloc] initWithFilename:path password:password keyFile:keyFilePath ];
+        } else {
+            dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+        }
+        
 
         // Store the password in the keychain
         if ([[AppSettings sharedInstance] rememberPasswordsEnabled]) {

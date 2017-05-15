@@ -19,6 +19,7 @@
 #import "EntryViewController.h"
 #import "AppSettings.h"
 #import "DatabaseManager.h"
+#import "DropboxManager.h"
 #import "KeychainUtils.h"
 #import "LockScreenManager.h"
 #import "MiniKeePass-Swift.h"
@@ -57,6 +58,9 @@
     // Initialize the lock screen manager
     [LockScreenManager sharedInstance];
 
+    // Initialize the Dropbox Manager
+    [[DropboxManager sharedInstance] initDropboxAPI];
+    
     return YES;
 }
 
@@ -66,6 +70,17 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+
+    printf("Handling URL redirect from dropbox.\n" );
+    uint32_t status = [[DropboxManager sharedInstance] accountAuthorizationRedirect:url];
+    if( status != DropboxOK || status != DropboxNotHandled ) {
+        if( status == DropboxUserCanceled ) {
+            printf("Authorization flow was manually canceled by user!\n");
+        } else if (status == DropboxError ) {
+            printf("Error in authResult\n" );
+        }
+    }
+
     [self importUrl:url];
 
     return YES;
@@ -129,8 +144,16 @@
     
     _databaseDocument = newDatabaseDocument;
     
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"GroupView" bundle: nil];
+    UINavigationController *viewController = [storyboard instantiateInitialViewController];
+    
+    GroupViewController *groupViewController = (GroupViewController *)[viewController topViewController];
+    
+//    present(viewController, animated: true, completion: nil)
+/*
     // Create and push on the root group view controller
     GroupViewController *groupViewController = [[GroupViewController alloc] initWithStyle:UITableViewStylePlain];
+*/
     groupViewController.parentGroup = _databaseDocument.kdbTree.root;
     groupViewController.title = [_databaseDocument.filename lastPathComponent];
 

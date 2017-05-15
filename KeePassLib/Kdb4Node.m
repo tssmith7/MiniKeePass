@@ -18,6 +18,13 @@
 #import "Kdb4Node.h"
 
 @implementation Kdb4Group
+- (id)init {
+    self = [super init];
+    if (self) {
+        _customData = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
 @end
 
 @implementation StringField
@@ -84,6 +91,7 @@
         _stringFields = [[NSMutableArray alloc] init];
         _binaries = [[NSMutableArray alloc] init];
         _history = [[NSMutableArray alloc] init];
+        _customData = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -136,12 +144,16 @@
 - (id)init {
     self = [super init];
     if (self) {
-        _rounds = DEFAULT_TRANSFORMATION_ROUNDS;
         _compressionAlgorithm = COMPRESSION_GZIP;
         _customIcons = [[NSMutableArray alloc] init];
         _binaries = [[NSMutableArray alloc] init];
         _customData = [[NSMutableArray alloc] init];
         _deletedObjects = [[NSMutableArray alloc] init];
+        _forcedVersion = 0;
+
+        _kdfParams = [[VariantDictionary alloc] init];
+        _customPluginData = [[VariantDictionary alloc] init];
+        _headerBinaries = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -149,14 +161,14 @@
 - (KdbGroup*)createGroup:(KdbGroup*)parent {
     Kdb4Group *group = [[Kdb4Group alloc] init];
 
-    group.uuid = [UUID uuid];
+    group.uuid = [KdbUUID uuid];
     group.notes = @"";
     group.image = 0;
     group.isExpanded = true;
     group.defaultAutoTypeSequence = @"";
     group.enableAutoType = @"null";
     group.enableSearching = @"null";
-    group.lastTopVisibleEntry = [UUID nullUuid];
+    group.lastTopVisibleEntry = [KdbUUID nullUuid];
 
     NSDate *currentTime = [NSDate date];
     group.lastModificationTime = currentTime;
@@ -173,7 +185,7 @@
 - (KdbEntry*)createEntry:(KdbGroup*)parent {
     Kdb4Entry *entry = [[Kdb4Entry alloc] init];
 
-    entry.uuid = [UUID uuid];
+    entry.uuid = [KdbUUID uuid];
     entry.image = 0;
     entry.titleStringField = [[StringField alloc] initWithKey:FIELD_TITLE andValue:@"New Entry"];
     entry.usernameStringField = [[StringField alloc] initWithKey:FIELD_USER_NAME andValue:@""];
