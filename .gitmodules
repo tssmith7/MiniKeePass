@@ -1,3 +1,9 @@
+[submodule "dropbox-sdk-obj-c"]
+	path = dropbox-sdk-obj-c
+	url = https://github.com/dropbox/dropbox-sdk-obj-c
+[submodule "phc-winner-argon2"]
+	path = phc-winner-argon2
+	url = https://github.com/P-H-C/phc-winner-argon2
 [submodule "MBProgressHUD"]
 	path = MBProgressHUD
-	url = git@github.com:MiniKeePass/MBProgressHUD.git
+	url = https://github.com/jdg/MBProgressHUD

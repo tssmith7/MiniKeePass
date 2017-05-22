@@ -96,8 +96,7 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     if( !isInitialized ) return NO;
     
     [DBClientsManager authorizeFromController:app controller:controller
-                                      openURL:^(NSURL *url) { [app openURL:url]; }
-                                  browserAuth:NO];
+                                      openURL:^(NSURL *url) { [app openURL:url]; } ];
     return YES;
 }
 
@@ -472,11 +471,11 @@ const NSString *DB_REVISION_CODE = @"revision_code";
 
 -(void) startUploadDropboxFile:(NSString*)file requestCallback:(DMrequestCallback)requestCallback {
 
-    NSString *destpath = [self getRemotePath:[file lastPathComponent]];
-    NSURL *srcUrl = [self getLocalURL:[file lastPathComponent]];
+    NSString *destPath = [self getRemotePath:[file lastPathComponent]];
+    NSString *srcPath = [self getLocalPath:[file lastPathComponent]];
     DBFILESWriteMode *writemode = [[DBFILESWriteMode alloc] initWithOverwrite];
-    [[client.filesRoutes uploadUrl:destpath mode:writemode autorename:[NSNumber numberWithBool:NO]
-                     clientModified:nil mute:[NSNumber numberWithBool:YES] inputUrl:srcUrl ]
+    [[client.filesRoutes uploadUrl:destPath mode:writemode autorename:[NSNumber numberWithBool:NO]
+                     clientModified:nil mute:[NSNumber numberWithBool:YES] inputUrl:srcPath ]
       setResponseBlock:^(DBFILESFileMetadata *result, DBFILESUploadError *routeError, DBRequestError *networkError) {
           if (result) {
               dropboxFileMetadata[file] = result;
