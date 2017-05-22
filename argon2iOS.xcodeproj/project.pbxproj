@@ -22,20 +22,7 @@
 		78477A431ED2A9B4001F6438 /* blamka-round-opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3E1ED2A9B4001F6438 /* blamka-round-opt.h */; };
 		78477A441ED2A9B4001F6438 /* blamka-round-ref.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3F1ED2A9B4001F6438 /* blamka-round-ref.h */; };
 		78477A4B1ED2AB10001F6438 /* argon2iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A491ED2AB10001F6438 /* argon2iOS.h */; };
-		78477A4C1ED2AB10001F6438 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78477A4A1ED2AB10001F6438 /* Info.plist */; };
-		78F802951E8EE2A50039625E /* argon2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78F8028B1E8EE2A50039625E /* argon2iOS.framework */; };
-		78F8029A1E8EE2A50039625E /* argon2iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78F802991E8EE2A50039625E /* argon2iOSTests.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		78F802961E8EE2A50039625E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 78F802821E8EE2A40039625E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 78F8028A1E8EE2A50039625E;
-			remoteInfo = argon2iOS;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		78477A291ED2A95E001F6438 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = argon2.h; path = "phc-winner-argon2/include/argon2.h"; sourceTree = SOURCE_ROOT; };
@@ -54,33 +41,14 @@
 		78477A3F1ED2A9B4001F6438 /* blamka-round-ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blamka-round-ref.h"; path = "phc-winner-argon2/src/blake2/blamka-round-ref.h"; sourceTree = SOURCE_ROOT; };
 		78477A491ED2AB10001F6438 /* argon2iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argon2iOS.h; sourceTree = "<group>"; };
 		78477A4A1ED2AB10001F6438 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78AA6EF21E969FAF00B259D4 /* libargon2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libargon2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		78F8028B1E8EE2A50039625E /* argon2iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = argon2iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		78F802941E8EE2A50039625E /* argon2iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = argon2iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		78F802991E8EE2A50039625E /* argon2iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = argon2iOSTests.m; sourceTree = "<group>"; };
-		78F8029B1E8EE2A50039625E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		78AA6EEF1E969FAF00B259D4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		78F802871E8EE2A50039625E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78F802911E8EE2A50039625E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				78F802951E8EE2A50039625E /* argon2iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +61,6 @@
 				78F802CD1E8EE2D00039625E /* include */,
 				78F802A51E8EE2BE0039625E /* src */,
 				78F8028D1E8EE2A50039625E /* argon2iOS */,
-				78F802981E8EE2A50039625E /* argon2iOSTests */,
 				78F8028C1E8EE2A50039625E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,8 +69,6 @@
 			isa = PBXGroup;
 			children = (
 				78F8028B1E8EE2A50039625E /* argon2iOS.framework */,
-				78F802941E8EE2A50039625E /* argon2iOSTests.xctest */,
-				78AA6EF21E969FAF00B259D4 /* libargon2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,15 +80,6 @@
 				78477A4A1ED2AB10001F6438 /* Info.plist */,
 			);
 			path = argon2iOS;
-			sourceTree = "<group>";
-		};
-		78F802981E8EE2A50039625E /* argon2iOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				78F802991E8EE2A50039625E /* argon2iOSTests.m */,
-				78F8029B1E8EE2A50039625E /* Info.plist */,
-			);
-			path = argon2iOSTests;
 			sourceTree = "<group>";
 		};
 		78F802A51E8EE2BE0039625E /* src */ = {
@@ -167,13 +123,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		78AA6EF01E969FAF00B259D4 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		78F802881E8EE2A50039625E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -193,23 +142,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		78AA6EF11E969FAF00B259D4 /* libargon2 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 78AA6EF51E969FAF00B259D4 /* Build configuration list for PBXNativeTarget "libargon2" */;
-			buildPhases = (
-				78AA6EEE1E969FAF00B259D4 /* Sources */,
-				78AA6EEF1E969FAF00B259D4 /* Frameworks */,
-				78AA6EF01E969FAF00B259D4 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = libargon2;
-			productName = libargon2;
-			productReference = 78AA6EF21E969FAF00B259D4 /* libargon2.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		78F8028A1E8EE2A50039625E /* argon2iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 78F8029F1E8EE2A50039625E /* Build configuration list for PBXNativeTarget "argon2iOS" */;
@@ -228,24 +160,6 @@
 			productReference = 78F8028B1E8EE2A50039625E /* argon2iOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		78F802931E8EE2A50039625E /* argon2iOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 78F802A21E8EE2A50039625E /* Build configuration list for PBXNativeTarget "argon2iOSTests" */;
-			buildPhases = (
-				78F802901E8EE2A50039625E /* Sources */,
-				78F802911E8EE2A50039625E /* Frameworks */,
-				78F802921E8EE2A50039625E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				78F802971E8EE2A50039625E /* PBXTargetDependency */,
-			);
-			name = argon2iOSTests;
-			productName = argon2iOSTests;
-			productReference = 78F802941E8EE2A50039625E /* argon2iOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -255,15 +169,7 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Tait Smith";
 				TargetAttributes = {
-					78AA6EF11E969FAF00B259D4 = {
-						CreatedOnToolsVersion = 8.3;
-						ProvisioningStyle = Automatic;
-					};
 					78F8028A1E8EE2A50039625E = {
-						CreatedOnToolsVersion = 8.3;
-						ProvisioningStyle = Automatic;
-					};
-					78F802931E8EE2A50039625E = {
 						CreatedOnToolsVersion = 8.3;
 						ProvisioningStyle = Automatic;
 					};
@@ -282,8 +188,6 @@
 			projectRoot = "";
 			targets = (
 				78F8028A1E8EE2A50039625E /* argon2iOS */,
-				78F802931E8EE2A50039625E /* argon2iOSTests */,
-				78AA6EF11E969FAF00B259D4 /* libargon2 */,
 			);
 		};
 /* End PBXProject section */
@@ -293,27 +197,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78477A4C1ED2AB10001F6438 /* Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78F802921E8EE2A50039625E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		78AA6EEE1E969FAF00B259D4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		78F802861E8EE2A50039625E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,47 +216,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		78F802901E8EE2A50039625E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				78F8029A1E8EE2A50039625E /* argon2iOSTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		78F802971E8EE2A50039625E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 78F8028A1E8EE2A50039625E /* argon2iOS */;
-			targetProxy = 78F802961E8EE2A50039625E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		78AA6EF31E969FAF00B259D4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_NAME = argon2;
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		78AA6EF41E969FAF00B259D4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_NAME = argon2;
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 		78F8029D1E8EE2A50039625E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -504,38 +355,9 @@
 			};
 			name = Release;
 		};
-		78F802A31E8EE2A50039625E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = argon2iOSTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.argon2iOSTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		78F802A41E8EE2A50039625E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = argon2iOSTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.argon2iOSTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		78AA6EF51E969FAF00B259D4 /* Build configuration list for PBXNativeTarget "libargon2" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				78AA6EF31E969FAF00B259D4 /* Debug */,
-				78AA6EF41E969FAF00B259D4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		78F802851E8EE2A40039625E /* Build configuration list for PBXProject "argon2iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -550,15 +372,6 @@
 			buildConfigurations = (
 				78F802A01E8EE2A50039625E /* Debug */,
 				78F802A11E8EE2A50039625E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		78F802A21E8EE2A50039625E /* Build configuration list for PBXNativeTarget "argon2iOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				78F802A31E8EE2A50039625E /* Debug */,
-				78F802A41E8EE2A50039625E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
