@@ -17,6 +17,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "CloudFactory.h"
 
 typedef void (^CMrequestCallback)(NSError *);
 
@@ -31,7 +32,6 @@ enum {
 
 @interface CloudManager : NSObject
 
-+(CloudManager *)sharedInstance;
 -(void) initAPI;
 -(BOOL) isClientAuthorized;
 -(BOOL) getAccountAuthorization:(UIApplication*)app controller:(UIViewController*)controller;

@@ -195,20 +195,6 @@
 			remoteGlobalIDString = 78F8028B1E8EE2A50039625E;
 			remoteInfo = argon2iOS;
 		};
-		78477A251ED2A90F001F6438 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 78477A1D1ED2A90F001F6438 /* argon2iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 78F802941E8EE2A50039625E;
-			remoteInfo = argon2iOSTests;
-		};
-		78477A271ED2A90F001F6438 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 78477A1D1ED2A90F001F6438 /* argon2iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 78AA6EF21E969FAF00B259D4;
-			remoteInfo = libargon2;
-		};
 		78477A471ED2AAA6001F6438 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78477A1D1ED2A90F001F6438 /* argon2iOS.xcodeproj */;
@@ -999,8 +985,6 @@
 			isa = PBXGroup;
 			children = (
 				78477A241ED2A90F001F6438 /* argon2iOS.framework */,
-				78477A261ED2A90F001F6438 /* argon2iOSTests.xctest */,
-				78477A281ED2A90F001F6438 /* libargon2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1123,20 +1107,6 @@
 			fileType = wrapper.framework;
 			path = argon2iOS.framework;
 			remoteRef = 78477A231ED2A90F001F6438 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		78477A261ED2A90F001F6438 /* argon2iOSTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = argon2iOSTests.xctest;
-			remoteRef = 78477A251ED2A90F001F6438 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		78477A281ED2A90F001F6438 /* libargon2.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libargon2.a;
-			remoteRef = 78477A271ED2A90F001F6438 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1474,7 +1444,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.tssmith;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.minikeepass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";
@@ -1497,7 +1467,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.tssmith;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.minikeepass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";

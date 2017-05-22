@@ -16,8 +16,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "CloudManager.h"
 #import "CloudDocument.h"
+
+@class CloudManager;
 
 @interface CloudFactory : NSObject
 

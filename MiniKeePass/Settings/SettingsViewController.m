@@ -724,7 +724,7 @@ enum {
 - (void)toggleDropboxEnabled:(id)sender {
     [self.appSettings setDropboxEnabled:dropboxEnabledCell.switchControl.on];
     if( dropboxEnabledCell.switchControl.on ) {
-        if( ![[DropboxManager sharedInstance] getAccountAuthorization:[UIApplication sharedApplication]
+        if( ![[CloudFactory getCloudManager] getAccountAuthorization:[UIApplication sharedApplication]
                                                            controller:self] ) {
             [self.appSettings setDropboxEnabled:NO];
             [dropboxEnabledCell.switchControl setOn:NO];
@@ -734,7 +734,7 @@ enum {
         }
     } else {
         [KeychainUtils deleteAllForServiceName:KEYCHAIN_OAUTH2_SERVICE];
-        [[DropboxManager sharedInstance] resetAccount];
+        [[CloudFactory getCloudManager] resetAccount];
     }
 
 }

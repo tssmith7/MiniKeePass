@@ -29,7 +29,7 @@
 
     // Update the file on dropbox.
     NSString *fileOnly = [self.filename lastPathComponent];
-    [[DropboxManager sharedInstance] uploadFile:fileOnly requestCallback:^(NSError *error) {
+    [[CloudFactory getCloudManager] uploadFile:fileOnly requestCallback:^(NSError *error) {
         if( error != nil ) {
             NSLog( @"%@\n", error.description);
         }

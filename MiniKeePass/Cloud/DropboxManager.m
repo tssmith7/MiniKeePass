@@ -33,6 +33,8 @@ static NSString *DROPBOX_TEMP_DIR = @"dropbox_tmp_pjff2mxp8";
 // File to store the dictionary of Files and their metadata.
 static NSString *DROPBOX_META_ARCHIVE = @"dropbox_dict";
 
+static BOOL appKeyInitialized = NO;
+
 @interface DropboxManager () {
     BOOL isInitialized;
     DBUserClient *client;
@@ -74,7 +76,11 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     if( !isInitialized ) {
         // Initialize the Dropbox Client Manager
         @try {
-            [DBClientsManager setupWithAppKey:DROPBOX_APP_KEY];
+            if( !appKeyInitialized ) {
+                // Only call this once per process execution.
+                [DBClientsManager setupWithAppKey:DROPBOX_APP_KEY];
+                appKeyInitialized = YES;
+            }
         } @catch (NSException *exception) {
             NSLog(@"%@", exception);
             return;

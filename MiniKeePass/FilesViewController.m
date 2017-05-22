@@ -104,7 +104,7 @@ enum {
     NSString *documentsDirectory = [MiniKeePassAppDelegate documentsDirectory];
     
     // get the dropbox temp directory
-    NSString *dropbox_dir = [[DropboxManager sharedInstance] getLocalPath:@""];
+    NSString *dropbox_dir = [[CloudFactory getCloudManager] getLocalPath:@""];
 
     // Get the contents of the documents directory
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -140,12 +140,12 @@ enum {
 - (void)loadDropboxFiles {
 
     self.dropbox_status = @"Loading ...";
-    [[DropboxManager sharedInstance] loadFileList:^(NSError *error) {
+    [[CloudFactory getCloudManager] loadFileList:^(NSError *error) {
         if( error != nil ) {
             NSLog(@"%@\n", error);
             self.dropbox_status = [error localizedDescription];
         } else {
-            self.dropboxFiles = [NSMutableArray arrayWithArray:[[DropboxManager sharedInstance] getFileList]];
+            self.dropboxFiles = [NSMutableArray arrayWithArray:[[CloudFactory getCloudManager] getFileList]];
             if( self.dropboxFiles == nil || [self.dropboxFiles count] == 0 ) {
                 self.dropbox_status = @"No Files Found";
             } else {
@@ -159,7 +159,7 @@ enum {
 
 - (void)downloadDropboxFile:(NSString *)path {
 
-    [[DropboxManager sharedInstance] downloadFile:path requestCallback:^(NSError *error) {
+    [[CloudFactory getCloudManager] downloadFile:path requestCallback:^(NSError *error) {
         if( error != nil ) {
             NSLog(@"%@\n", error);
             self.dropbox_status = [error localizedDescription];
@@ -336,7 +336,7 @@ enum {
         NSFileManager *fileManager = [NSFileManager defaultManager];
         modificationDate = [[fileManager attributesOfItemAtPath:path error:nil] fileModificationDate];
     } else {
-        modificationDate = [[DropboxManager sharedInstance] getFileModifiedDate:filename];
+        modificationDate = [[CloudFactory getCloudManager] getFileModifiedDate:filename];
     }
 
     // Format the last modified time as the subtitle of the cell

@@ -43,7 +43,7 @@ static DatabaseManager *sharedInstance;
     BOOL databaseLoaded = NO;
     
     if( isCloudBased ) {
-        self.selectedFilename = [[[CloudManager sharedInstance] getTempDir]
+        self.selectedFilename = [[[CloudFactory getCloudManager] getTempDir]
                                  stringByAppendingPathComponent:filename ];
     } else {
         self.selectedFilename = filename;

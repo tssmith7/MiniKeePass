@@ -61,9 +61,6 @@
     // Initialize the lock screen manager
     [LockScreenManager sharedInstance];
     
-    // Initialize the Cloud Storage Manager
-    [[CloudManager sharedInstance] initAPI];
-    
     return YES;
 }
 
@@ -74,7 +71,7 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     printf("Handling URL redirect from dropbox.\n" );
-    uint32_t status = [[DropboxManager sharedInstance] accountAuthorizationRedirect:url];
+    uint32_t status = [[CloudFactory getCloudManager] accountAuthorizationRedirect:url];
     if( status != DropboxOK || status != DropboxNotHandled ) {
         if( status == DropboxUserCanceled ) {
             printf("Authorization flow was manually canceled by user!\n");

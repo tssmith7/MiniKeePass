@@ -20,23 +20,25 @@
 #import "DropboxDocument.h"
 #import "AppSettings.h"
 
-@interface CloudFactory () {
-    BOOL isInitialized;
-}
-@end
-
 @implementation CloudFactory
 
 static CloudManager *sharedInstance;
 
 +(CloudManager*) getCloudManager {
     AppSettings *appSettings = [AppSettings sharedInstance];
+    CloudManager *initCM = sharedInstance;
+    
     if( appSettings.dropboxEnabled ) {
         if( ![sharedInstance isKindOfClass:[DropboxManager class]] ) {
             sharedInstance = [[DropboxManager alloc] init];
         }
     } else {
         sharedInstance = nil;
+    }
+    
+    if( sharedInstance != initCM ) {
+        // CloudManager was changed so we should initialize it.
+        [sharedInstance initAPI];
     }
     
     return sharedInstance;
