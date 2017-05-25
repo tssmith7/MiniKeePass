@@ -24,6 +24,7 @@
 
 +(CloudManager*) getCloudManager;
 +(CloudDocument*) openCloudFile:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile;
++(NSArray*) getServiceNameList;
 
 @end
 

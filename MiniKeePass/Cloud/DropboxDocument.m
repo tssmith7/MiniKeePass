@@ -21,9 +21,9 @@
 
 @implementation DropboxDocument
 
-- (void)save {
+- (void)save:(CompletionHandler)completionHandler {
     // Call super's save function to save to local disk.
-    [super save];
+    [super save:nil];
     
     printf("Saving dropbox file to cloud...\n");
 
@@ -33,6 +33,7 @@
         if( error != nil ) {
             NSLog( @"%@\n", error.description);
         }
+        completionHandler();
     }];
 }
 

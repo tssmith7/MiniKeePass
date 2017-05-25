@@ -18,22 +18,40 @@
 #import "CloudFactory.h"
 #import "DropboxManager.h"
 #import "DropboxDocument.h"
+//#import "GDriveManager.h"
 #import "AppSettings.h"
 
 @implementation CloudFactory
 
-static CloudManager *sharedInstance;
+static NSArray *cloudServiceNames = nil;  // Assigned in getServiceNameList
++(NSArray*) getServiceNameList {
+    if( cloudServiceNames == nil ) {
+        cloudServiceNames = @[@"Dropbox" /*, @"Google Drive" */ ];
+    }
+    
+    return cloudServiceNames;
+}
+
+static CloudManager *sharedInstance = nil;
 
 +(CloudManager*) getCloudManager {
     AppSettings *appSettings = [AppSettings sharedInstance];
     CloudManager *initCM = sharedInstance;
     
-    if( appSettings.dropboxEnabled ) {
-        if( ![sharedInstance isKindOfClass:[DropboxManager class]] ) {
-            sharedInstance = [[DropboxManager alloc] init];
-        }
-    } else {
-        sharedInstance = nil;
+    switch( appSettings.cloudServiceIndex ) {
+        case 0 :    // Dropbox (see cloudServicesNames array order)
+            if( ![sharedInstance isKindOfClass:[DropboxManager class]] ) {
+                sharedInstance = [[DropboxManager alloc] init];
+            }
+            break;
+        case 1 :    // Google Drive Service
+//            if( ![sharedInstance isKindOfClass:[GDriveManager class]] ) {
+//                sharedInstance = [[GDriveManager alloc] init];
+//            }
+//            break;
+        default:
+            sharedInstance = nil;
+            break;
     }
     
     if( sharedInstance != initCM ) {
@@ -56,6 +74,8 @@ static CloudManager *sharedInstance;
     CloudDocument *doc;
     if( [cloudMgr isKindOfClass:[DropboxManager class]] ) {
         doc = [[DropboxDocument alloc] initWithFilename:filename password:password keyFile:keyFile ];
+//    } else if( [cloudMgr isKindOfClass:[GDriveManager class]] ) {
+//        doc = [[GDriveDocument alloc] initWithFilename:filename password:password keyFile:keyFile ];
     } else {
         doc = nil;
     }

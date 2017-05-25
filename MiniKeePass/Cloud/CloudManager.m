@@ -23,6 +23,7 @@
 -(BOOL) isClientAuthorized {[self doesNotRecognizeSelector:_cmd]; return NO;}
 -(BOOL) getAccountAuthorization:(UIApplication*)app controller:(UIViewController*)controller {[self doesNotRecognizeSelector:_cmd]; return NO;}
 -(uint32_t) accountAuthorizationRedirect:(NSURL*)url {[self doesNotRecognizeSelector:_cmd]; return 0;}
+-(BOOL) isAccountAuthorizing {[self doesNotRecognizeSelector:_cmd]; return NO;}
 -(void) resetAccount {[self doesNotRecognizeSelector:_cmd];}
 
 -(void) loadFileList:(CMrequestCallback)requestCallback {[self doesNotRecognizeSelector:_cmd];}
@@ -36,5 +37,7 @@
 -(NSURL *)getLocalURL:(NSString *)filename {[self doesNotRecognizeSelector:_cmd];return nil;}
 -(NSString *)getRemotePath:(NSString *)filename {[self doesNotRecognizeSelector:_cmd];return nil;}
 -(NSString *)getTempDir {[self doesNotRecognizeSelector:_cmd];return nil;}
+
+-(NSDictionary*)getAccountInformation {[self doesNotRecognizeSelector:_cmd];return nil;}
 
 @end

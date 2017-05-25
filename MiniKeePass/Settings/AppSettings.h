@@ -80,8 +80,10 @@
 - (BOOL)webBrowserIntegrated;
 - (void)setWebBrowserIntegrated:(BOOL)webBrowserIntegrated;
 
-- (BOOL)dropboxEnabled;
-- (void)setDropboxEnabled:(BOOL)dropboxEnabled;
+- (BOOL)cloudEnabled;
+- (void)setCloudEnabled:(BOOL)cloudEnabled;
+- (NSInteger)cloudServiceIndex;
+- (void)setCloudServiceIndex:(NSInteger)cloudServiceIndex;
 
 - (NSInteger)pwGenLength;
 - (void)setPwGenLength:(NSInteger)pwGenLength;

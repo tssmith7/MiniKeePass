@@ -21,6 +21,6 @@
 @interface DropboxDocument : CloudDocument
 
 /// Save the current KeePass DropboxDocument to the cloud
-- (void)save;
+- (void)save:(CompletionHandler)completionHandler;
 
 @end

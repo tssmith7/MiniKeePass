@@ -24,7 +24,7 @@
 #import "DatabaseManager.h"
 #import "KeychainUtils.h"
 #import "LockScreenManager.h"
-#import "DropboxManager.h"
+#import "CloudManager.h"
 
 @interface MiniKeePassAppDelegate ()
 
@@ -70,15 +70,18 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    printf("Handling URL redirect from dropbox.\n" );
-    uint32_t status = [[CloudFactory getCloudManager] accountAuthorizationRedirect:url];
-    if( status != DropboxOK || status != DropboxNotHandled ) {
-        if( status == DropboxUserCanceled ) {
-            printf("Authorization flow was manually canceled by user!\n");
-            // Turn off settings toggle.
-            [[AppSettings sharedInstance] setDropboxEnabled:NO];
-        } else if (status == DropboxError ) {
+    CloudManager *cloudMgr = [CloudFactory getCloudManager];
+    if( [cloudMgr isAccountAuthorizing] ) {
+        uint32_t status = [cloudMgr accountAuthorizationRedirect:url];
+        if( status == CloudManager_OK ) {
+            return YES;
+        } else if( status == CloudManager_UserCanceled ) {
+                printf("Authorization flow was manually canceled by user!\n");
+                // Turn off settings toggle.
+                [[AppSettings sharedInstance] setCloudEnabled:NO];
+        } else if( status == CloudManager_Error ) {
             printf("Error in authResult\n" );
+            return NO;
         }
     }
     

@@ -23,6 +23,8 @@
 #import "CloudManager.h"
 #import "CloudFactory.h"
 
+#import <MBProgressHUD/MBProgressHUD.h>
+
 @implementation DatabaseManager
 
 static DatabaseManager *sharedInstance;
@@ -40,7 +42,6 @@ static DatabaseManager *sharedInstance;
 }
 
 - (void)openDatabaseDocument:(NSString*)filename animated:(BOOL)animated isCloudBased:(BOOL)isCloudBased {
-    BOOL databaseLoaded = NO;
     
     if( isCloudBased ) {
         self.selectedFilename = [[[CloudFactory getCloudManager] getTempDir]
@@ -73,48 +74,59 @@ static DatabaseManager *sharedInstance;
         }
 
         // Load the database
-        @try {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:appDelegate.window.rootViewController.view animated:YES];
+        
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.label.text = @"Loading...";
+        
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             DatabaseDocument *dd;
-            if( isCloudBased ) {
-                dd = [CloudFactory openCloudFile:path password:password keyFile:keyFilePath ];
-            } else {
-                dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
-            }
-            databaseLoaded = YES;
+            @try {
+                if( isCloudBased ) {
+                    dd = [CloudFactory openCloudFile:path password:password keyFile:keyFilePath ];
+                } else {
+                    dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+                }
+                [MBProgressHUD hideHUDForView:appDelegate.window.rootViewController.view animated:YES];
             
-            // Set the database document in the application delegate
-            appDelegate.databaseDocument = dd;
-        } @catch (NSException *exception) {
-            // Ignore
-        }
+                // Set the database document in the application delegate
+                appDelegate.databaseDocument = dd;
+            } @catch (NSException *exception) {
+                [self setupPasswordViewController:filename isCloudBased:isCloudBased];
+            }
+        });
+    } else {
+        [self setupPasswordViewController:filename isCloudBased:isCloudBased];
+    }
+}
+
+- (void)setupPasswordViewController:(NSString *)filename isCloudBased:(BOOL)isCloudBased {
+    // Prompt the user for the password if we haven't loaded the database yet
+    PasswordViewController *passwordViewController = [[PasswordViewController alloc] initWithFilename:filename];
+    passwordViewController.donePressed = ^(FormViewController *formViewController) {
+        [self openDatabaseWithPasswordViewController:(PasswordViewController *)formViewController isCloudBased:isCloudBased];
+    };
+    passwordViewController.cancelPressed = ^(FormViewController *formViewController) {
+        [formViewController dismissViewControllerAnimated:YES completion:nil];
+    };
+    
+    // Create a default keyfile name from the database name
+    NSString *keyFile = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"key"];
+    
+    // Select the keyfile if it's in the list
+    NSInteger index = [passwordViewController.keyFileCell.choices indexOfObject:keyFile];
+    if (index != NSNotFound) {
+        passwordViewController.keyFileCell.selectedIndex = index;
+    } else {
+        passwordViewController.keyFileCell.selectedIndex = 0;
     }
     
-    // Prompt the user for the password if we haven't loaded the database yet
-    if (!databaseLoaded) {
-        // Prompt the user for a password
-        PasswordViewController *passwordViewController = [[PasswordViewController alloc] initWithFilename:filename];
-        passwordViewController.donePressed = ^(FormViewController *formViewController) {
-            [self openDatabaseWithPasswordViewController:(PasswordViewController *)formViewController isCloudBased:isCloudBased];
-        };
-        passwordViewController.cancelPressed = ^(FormViewController *formViewController) {
-            [formViewController dismissViewControllerAnimated:YES completion:nil];
-        };
-        
-        // Create a default keyfile name from the database name
-        keyFile = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"key"];
-        
-        // Select the keyfile if it's in the list
-        NSInteger index = [passwordViewController.keyFileCell.choices indexOfObject:keyFile];
-        if (index != NSNotFound) {
-            passwordViewController.keyFileCell.selectedIndex = index;
-        } else {
-            passwordViewController.keyFileCell.selectedIndex = 0;
-        }
-        
+    // Get the application delegate
+    MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:passwordViewController];
         
-        [appDelegate.window.rootViewController presentViewController:navigationController animated:animated completion:nil];
-    }
+    [appDelegate.window.rootViewController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)openDatabaseWithPasswordViewController:(PasswordViewController *)passwordViewController isCloudBased:(BOOL)isCloudBased {
@@ -141,33 +153,61 @@ static DatabaseManager *sharedInstance;
     }
 
     // Load the database
-    @try {
         // Open the database
-        DatabaseDocument *dd;
-        if( isCloudBased ) {
-            dd = [CloudFactory openCloudFile:path password:password keyFile:keyFilePath ];
-        } else {
-            dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
-        }
 
-        // Store the password in the keychain
-        if ([[AppSettings sharedInstance] rememberPasswordsEnabled]) {
-            [KeychainUtils setString:password forKey:self.selectedFilename
-                      andServiceName:KEYCHAIN_PASSWORDS_SERVICE];
-            [KeychainUtils setString:keyFile forKey:self.selectedFilename
-                      andServiceName:KEYCHAIN_KEYFILES_SERVICE];
-        }
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:passwordViewController.view animated:YES];
+        
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.label.text = @"Loading...";
 
-        // Dismiss the view controller, and after animation set the database document
-        [passwordViewController dismissViewControllerAnimated:YES completion:^{
-            // Set the database document in the application delegate
-            MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
-            appDelegate.databaseDocument = dd;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            DatabaseDocument *dd;
+            @try {
+                if( isCloudBased ) {
+                    dd = [CloudFactory openCloudFile:path password:password keyFile:keyFilePath ];
+                } else {
+                    dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+                }
+                [MBProgressHUD hideHUDForView:passwordViewController.view animated:YES];
+                
+                // Store the password in the keychain
+                if ([[AppSettings sharedInstance] rememberPasswordsEnabled]) {
+                    [KeychainUtils setString:password forKey:self.selectedFilename
+                              andServiceName:KEYCHAIN_PASSWORDS_SERVICE];
+                    [KeychainUtils setString:keyFile forKey:self.selectedFilename
+                              andServiceName:KEYCHAIN_KEYFILES_SERVICE];
+                }
+                
+                // Dismiss the view controller, and after animation set the database document
+                [passwordViewController dismissViewControllerAnimated:YES completion:^{
+                    // Set the database document in the application delegate
+                    MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
+                    appDelegate.databaseDocument = dd;
+                }];
+            } @catch (NSException *exception) {
+                NSLog(@"%@", exception);
+                [MBProgressHUD hideHUDForView:passwordViewController.view animated:YES];
+                [passwordViewController showErrorMessage:exception.reason];
+            }
+        });
+}
+
++(void)saveDatabaseDocument:(DatabaseDocument*)doc viewController:(UIViewController*)vc andDismiss:(BOOL)dismiss {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:vc.view animated:YES];
+    
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.label.text = @"Saving...";
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [doc save:^() {
+            [MBProgressHUD hideHUDForView:vc.view animated:YES];
+            if( dismiss ) {
+                [vc dismissViewControllerAnimated:YES completion:nil];
+            }
         }];
-    } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-        [passwordViewController showErrorMessage:exception.reason];
-    }
+    });
 }
 
 @end

@@ -21,9 +21,9 @@
 
 @implementation CloudDocument
 
-- (void)save {
+- (void)save:(CompletionHandler)completionHandler {
     // Call DatabaseDocument:save to actually write the file locally.
-    [super save];
+    [super save:completionHandler];
 }
 
 @end

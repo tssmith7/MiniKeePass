@@ -21,6 +21,6 @@
 @interface CloudDocument : DatabaseDocument
 
 /// Save the current KeePass DropboxDocument
-- (void)save;
+- (void)save:(CompletionHandler)completionHandler;
 
 @end

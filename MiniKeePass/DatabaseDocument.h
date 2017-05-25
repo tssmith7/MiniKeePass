@@ -23,6 +23,8 @@
 @property (nonatomic, strong) KdbTree *kdbTree;
 @property (nonatomic, copy) NSString *filename;
 
+typedef void (^CompletionHandler)();
+
 /// Create a KeePass Database
 /// @param filename Database filename
 /// @param password Database password
@@ -31,7 +33,7 @@
 - (id)initWithFilename:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile;
 
 /// Save the current KeePass DatabaseDocument
-- (void)save;
+- (void)save:(CompletionHandler)completionHandler;
 
 /// Search a KeePass group for the supplied text
 /// @param searchText The text for which you're searching

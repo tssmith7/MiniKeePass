@@ -18,6 +18,8 @@
 #import <Foundation/Foundation.h>
 #import "FormViewController.h"
 
+@class DatabaseDocument;
+
 @interface DatabaseManager : NSObject
 
 /// A string containing the name of the KeePass DatabaseDocument to be managed
@@ -31,5 +33,7 @@
 /// @param animated Animate the ViewController transition
 /// @param isCloudBased Is this file from cloud storage?
 - (void)openDatabaseDocument:(NSString*)path animated:(BOOL)newAnimated isCloudBased:(BOOL)isCloudBased;
+
++(void)saveDatabaseDocument:(DatabaseDocument*)doc viewController:(UIViewController*)vc andDismiss:(BOOL)dismiss;
 
 @end

@@ -40,7 +40,8 @@
 #define BACKUP_DISABLED            @"backupDisabled"
 #define CLEAR_CLIPBOARD_TIMEOUT    @"clearClipboardTimeout"
 #define WEB_BROWSER_INTEGRATED     @"webBrowserIntegrated"
-#define DROPBOX_ENABLED            @"dropboxEnabled"
+#define CLOUD_ENABLED              @"cloudEnabled"
+#define CLOUD_SERVICE              @"cloudService"
 #define PW_GEN_LENGTH              @"pwGenLength"
 #define PW_GEN_CHAR_SETS           @"pwGenCharSets"
 
@@ -126,7 +127,8 @@ static AppSettings *sharedInstance;
         [defaultsDict setValue:[NSNumber numberWithInt:0] forKey:CLEAR_CLIPBOARD_TIMEOUT];
         [defaultsDict setValue:[NSNumber numberWithBool:NO] forKey:BACKUP_DISABLED];
         [defaultsDict setValue:[NSNumber numberWithBool:YES] forKey:WEB_BROWSER_INTEGRATED];
-        [defaultsDict setValue:[NSNumber numberWithBool:NO] forKey:DROPBOX_ENABLED];
+        [defaultsDict setValue:[NSNumber numberWithBool:NO] forKey:CLOUD_ENABLED];
+        [defaultsDict setValue:[NSNumber numberWithInt:0] forKey:CLOUD_SERVICE];
         [defaultsDict setValue:[NSNumber numberWithInt:10] forKey:PW_GEN_LENGTH];
         [defaultsDict setValue:[NSNumber numberWithInt:CHARACTER_SET_DEFAULT] forKey:PW_GEN_CHAR_SETS];
         [userDefaults registerDefaults:defaultsDict];
@@ -377,12 +379,20 @@ static AppSettings *sharedInstance;
     [userDefaults setBool:webBrowserIntegrated forKey:WEB_BROWSER_INTEGRATED];
 }
 
-- (BOOL)dropboxEnabled {
-    return [userDefaults boolForKey:DROPBOX_ENABLED];
+- (BOOL)cloudEnabled {
+    return [userDefaults boolForKey:CLOUD_ENABLED];
 }
 
-- (void)setDropboxEnabled:(BOOL)dropboxEnabled {
-    [userDefaults setBool:dropboxEnabled forKey:DROPBOX_ENABLED];
+- (void)setCloudEnabled:(BOOL)dropboxEnabled {
+    [userDefaults setBool:dropboxEnabled forKey:CLOUD_ENABLED];
+}
+
+- (NSInteger)cloudServiceIndex {
+    return [userDefaults integerForKey:CLOUD_SERVICE];
+}
+
+- (void)setCloudServiceIndex:(NSInteger)cloudServiceIndex {
+    [userDefaults setInteger:cloudServiceIndex forKey:CLOUD_SERVICE];
 }
 
 - (NSInteger)pwGenLength {

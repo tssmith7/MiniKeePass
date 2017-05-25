@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Tait Smith. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,9 @@ static BOOL appKeyInitialized = NO;
 
 @interface DropboxManager () {
     BOOL isInitialized;
+    BOOL accountAuthorizing;
     DBUserClient *client;
+    NSDictionary *dropboxAccountInfo;
     NSMutableDictionary *dropboxFileMetadata;
     NSMutableDictionary *localFileMetadata;
 }
@@ -45,32 +47,9 @@ static BOOL appKeyInitialized = NO;
 
 @implementation DropboxManager
 
-// static DropboxManager *sharedInstance;
-
 const NSString *DB_MODIFICATION_DATE = @"mod_date";
 const NSString *DB_REVISION_CODE = @"revision_code";
 
-/*
-+ (void)initialize {
-    static BOOL initialized = NO;
-    if (!initialized)     {
-        initialized = YES;
-        sharedInstance = [[DropboxManager alloc] init];
-    }
-}
-
-+ (DropboxManager*)sharedInstance {
-    return sharedInstance;
-}
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        isInitialized = NO;
-    }
-    return self;
-}
-*/
 - (void) initAPI {
     
     if( !isInitialized ) {
@@ -103,11 +82,13 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     
     [DBClientsManager authorizeFromController:app controller:controller
                                       openURL:^(NSURL *url) { [app openURL:url]; } ];
+    accountAuthorizing = YES;
     return YES;
 }
 
 -(uint32_t) accountAuthorizationRedirect:(NSURL*)url {
     DBOAuthResult *authResult = [DBClientsManager handleRedirectURL:url];
+    accountAuthorizing = NO;
     if (authResult != nil) {
         if ([authResult isSuccess]) {
             NSString *token = authResult.accessToken.accessToken;
@@ -117,14 +98,18 @@ const NSString *DB_REVISION_CODE = @"revision_code";
             return [self setupClient:token];
         } else if ([authResult isCancel]) {
             printf("Authorization flow was manually canceled by user!\n");
-            return DropboxUserCanceled;
+            return CloudManager_UserCanceled;
         } else if ([authResult isError]) {
             printf("Error in authResult\n" );
             NSLog( @"%@\n", authResult.errorDescription);
-            return DropboxError;
+            return CloudManager_Error;
         }
     }
-    return DropboxNotHandled;
+    return CloudManager_NotHandled;
+}
+
+-(BOOL) isAccountAuthorizing {
+    return accountAuthorizing;
 }
 
 -(BOOL) isClientAuthorized {
@@ -141,26 +126,48 @@ const NSString *DB_REVISION_CODE = @"revision_code";
         token = [KeychainUtils stringForKey:DROPBOX_ACCESS_TOKEN andServiceName:KEYCHAIN_OAUTH2_SERVICE];
     }
     
-    if( token == nil ) return DropboxNotAuthorized;
+    if( token == nil ) return CloudManager_NotAuthorized;
     
     client = [[DBUserClient alloc] initWithAccessToken:token];
     if( client == nil ) {
         printf( "Cannot create client from access_token!\n");
-        return DropboxNotAuthorized;
+        return CloudManager_NotAuthorized;
     }
     
     if( ![client isAuthorized] ) {
-        return DropboxNotAuthorized;
+        return CloudManager_NotAuthorized;
     }
     
-    return DropboxOK;
+    dropboxAccountInfo = nil;
+    [[client.usersRoutes getCurrentAccount]
+     setResponseBlock:^(DBUSERSFullAccount *result, DBNilObject *routeError, DBRequestError *networkError) {
+         if (result) {
+             dropboxAccountInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   result.email, CLOUD_USER_EMAIL,
+                                   result.name, CLOUD_USER_NAME,
+                                   result.accountId, CLOUD_USER_ID,
+                                   nil];
+         } else {
+             NSLog(@"getCurrentAccount -- %@\n%@\n", routeError, networkError);
+             dropboxAccountInfo = nil;
+         }
+     }];
+    
+    return CloudManager_OK;
 }
 
 -(void) resetAccount {
     [DBClientsManager unlinkAndResetClients];
     client = nil;
+    dropboxAccountInfo = nil;
     [KeychainUtils deleteStringForKey:DROPBOX_ACCESS_TOKEN andServiceName:KEYCHAIN_OAUTH2_SERVICE];
+    [self deleteDropboxTempDir];
 }
+
+-(NSDictionary*)getAccountInformation {
+    return dropboxAccountInfo;
+}
+
 
 - (NSString *)getLocalPath:(NSString *)filename {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -382,7 +389,7 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     return conflictPath;
 }
 
--(void) loadFileList:(DMrequestCallback)requestCallback {
+-(void) loadFileList:(CMrequestCallback)requestCallback {
     
     if( client == nil || ![client isAuthorized] )
         requestCallback( [NSError errorWithDomain:@"DropboxAuthError" code:1 userInfo:nil] );
@@ -436,7 +443,7 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     return fileMetadata.clientModified;
 }
 
-- (void)downloadFile:(NSString*)file requestCallback:(DMrequestCallback)requestCallback {
+- (void)downloadFile:(NSString*)file requestCallback:(CMrequestCallback)requestCallback {
 
     if( client == nil || ![client isAuthorized] )
         requestCallback( [NSError errorWithDomain:@"DropboxAuthError" code:1 userInfo:nil] );
@@ -475,7 +482,7 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     
 }
 
--(void) startUploadDropboxFile:(NSString*)file requestCallback:(DMrequestCallback)requestCallback {
+-(void) startUploadDropboxFile:(NSString*)file requestCallback:(CMrequestCallback)requestCallback {
 
     NSString *destPath = [self getRemotePath:[file lastPathComponent]];
     NSString *srcPath = [self getLocalPath:[file lastPathComponent]];
@@ -499,7 +506,7 @@ const NSString *DB_REVISION_CODE = @"revision_code";
       }];
 }
 
-- (void)uploadFile:(NSString*)file requestCallback:(DMrequestCallback)requestCallback {
+- (void)uploadFile:(NSString*)file requestCallback:(CMrequestCallback)requestCallback {
 
     if( client == nil || ![client isAuthorized] )
         requestCallback( [NSError errorWithDomain:@"DropboxAuthError" code:1 userInfo:nil] );

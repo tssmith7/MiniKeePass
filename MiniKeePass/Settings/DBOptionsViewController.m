@@ -24,6 +24,7 @@
 #import "Kdb4Node.h"
 #import "KdbPassword.h"
 #import "UUID.h"
+#import "DatabaseManager.h"
 
 enum {
     SECTION_DATABASE_INFO,
@@ -305,8 +306,6 @@ enum {
                 return;
         }
     }
-
-    [self dismissViewControllerAnimated:YES completion:nil];
     
     uint64_t newSettings[6];
     
@@ -329,9 +328,10 @@ enum {
         // Copy the UI settings into the database tree
         [self changeDatabaseValues];
         // The settings were changed, we need to save the database
-        [self.databaseDocument save];
+        [DatabaseManager saveDatabaseDocument:self.databaseDocument viewController:self andDismiss:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
-    
 }
 
 - (void)cancelPressed {

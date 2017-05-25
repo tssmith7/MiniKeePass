@@ -21,6 +21,10 @@
 
 typedef void (^CMrequestCallback)(NSError *);
 
+static NSString *CLOUD_USER_EMAIL = @"email";
+static NSString *CLOUD_USER_NAME  = @"name";
+static NSString *CLOUD_USER_ID    = @"id";
+
 enum {
     CloudManager_OK,
     CloudManager_NotInitiatized,
@@ -36,6 +40,7 @@ enum {
 -(BOOL) isClientAuthorized;
 -(BOOL) getAccountAuthorization:(UIApplication*)app controller:(UIViewController*)controller;
 -(uint32_t) accountAuthorizationRedirect:(NSURL*)url;
+-(BOOL) isAccountAuthorizing;
 -(void) resetAccount;
 
 -(void) loadFileList:(CMrequestCallback)requestCallback;
@@ -49,6 +54,8 @@ enum {
 -(NSURL *)getLocalURL:(NSString *)filename;
 -(NSString *)getRemotePath:(NSString *)filename;
 -(NSString *)getTempDir;
+
+-(NSDictionary*)getAccountInformation;
 
 @end
 

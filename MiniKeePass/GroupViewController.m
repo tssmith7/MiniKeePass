@@ -24,6 +24,7 @@
 #import "AppSettings.h"
 #import "ImageFactory.h"
 #import "Kdb3Node.h"
+#import "DatabaseManager.h"
 
 #define PORTRAIT_BUTTON_WIDTH  ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? 97.0f : 244.0f)
 #define LANDSCAPE_BUTTON_WIDTH ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? 186.0f : 330.0f)
@@ -608,7 +609,7 @@ enum {
     NSUInteger index = [self addObject:g toArray:self.groupsArray];
 
     // Save the database
-    [databaseDocument save];
+//    [databaseDocument save:nil];
 
     EditItemViewController *editItemViewController = [[EditItemViewController alloc] initWithGroup:g];
     editItemViewController.donePressed = ^(FormViewController *formViewController) {
@@ -731,7 +732,7 @@ enum {
     }
 
     // Save the database
-    [databaseDocument save];
+    [DatabaseManager saveDatabaseDocument:databaseDocument viewController:self andDismiss:NO];
 }
 
 #pragma mark - Rename Group/Entry
@@ -793,9 +794,10 @@ enum {
     }
 
     // Save the document
-    [self.appDelegate.databaseDocument save];
+//    [self.appDelegate.databaseDocument save:nil];
+    [DatabaseManager saveDatabaseDocument:self.appDelegate.databaseDocument viewController:editItemViewController andDismiss:YES];
 
-    [editItemViewController dismissViewControllerAnimated:YES completion:nil];
+//    [editItemViewController dismissViewControllerAnimated:YES completion:nil];
 
     [self setEditing:NO animated:YES];
 }
@@ -895,7 +897,8 @@ enum {
 
     // Save the database
     DatabaseDocument *databaseDocument = self.appDelegate.databaseDocument;
-    [databaseDocument save];
+//    [databaseDocument save:nil];
+    [DatabaseManager saveDatabaseDocument:databaseDocument viewController:self andDismiss:NO];
 
     // Update the table
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];

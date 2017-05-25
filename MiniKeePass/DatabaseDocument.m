@@ -46,8 +46,11 @@
     return self;
 }
 
-- (void)save {
+- (void)save:(CompletionHandler)completionHandler {
     [KdbWriterFactory persist:self.kdbTree file:self.filename withPassword:self.kdbPassword];
+    if( completionHandler != nil ) {
+        completionHandler();
+    }
 }
 
 + (void)searchGroup:(KdbGroup *)group searchText:(NSString *)searchText results:(NSMutableArray *)results includeRecycleBin:(BOOL)includeRecycleBin {

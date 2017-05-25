@@ -37,8 +37,8 @@ enum {
 @property (nonatomic, strong) FilesInfoView *filesInfoView;
 @property (nonatomic, strong) NSMutableArray *databaseFiles;
 @property (nonatomic, strong) NSMutableArray *keyFiles;
-@property (nonatomic, strong) NSMutableArray *dropboxFiles;
-@property NSString *dropbox_status;
+@property (nonatomic, strong) NSMutableArray *cloudFiles;
+@property NSString *cloud_status;
 @end
 
 @implementation FilesViewController
@@ -48,7 +48,7 @@ enum {
 
     self.title = NSLocalizedString(@"Files", nil);
     self.tableView.allowsSelectionDuringEditing = YES;
-    self.dropbox_status = nil;
+    self.cloud_status = nil;
     
     MiniKeePassAppDelegate *appDelegate = [MiniKeePassAppDelegate appDelegate];
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear"]
@@ -98,14 +98,12 @@ enum {
 - (void)updateFiles {
     self.databaseFiles = [[NSMutableArray alloc] init];
     self.keyFiles = [[NSMutableArray alloc] init];
-    self.dropboxFiles = [[NSMutableArray alloc] init];
+    self.cloudFiles = [[NSMutableArray alloc] init];
 
     // Get the document's directory
     NSString *documentsDirectory = [MiniKeePassAppDelegate documentsDirectory];
     
-    // get the dropbox temp directory
-    NSString *dropbox_dir = [[CloudFactory getCloudManager] getLocalPath:@""];
-
+    
     // Get the contents of the documents directory
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *dirContents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:nil];
@@ -117,7 +115,7 @@ enum {
         // Check if it's a directory and make sure it is not the dropbox temp directory
         BOOL dir = NO;
         [fileManager fileExistsAtPath:path isDirectory:&dir];
-        if (!dir && ![file containsString:dropbox_dir] ) {
+        if (!dir) {
             NSString *extension = [[file pathExtension] lowercaseString];
             if ([extension isEqualToString:@"kdb"] || [extension isEqualToString:@"kdbx"]) {
                 [self.databaseFiles addObject:file];
@@ -127,9 +125,9 @@ enum {
         }
     }
     
-    self.dropbox_status = nil;
-    if( [[AppSettings sharedInstance] dropboxEnabled] ) {
-        [self loadDropboxFiles];
+    self.cloud_status = nil;
+    if( [[AppSettings sharedInstance] cloudEnabled] ) {
+        [self loadCloudFiles];
     }
 
     // Sort the list of files
@@ -137,36 +135,36 @@ enum {
     [self.keyFiles sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
-- (void)loadDropboxFiles {
+- (void)loadCloudFiles {
 
-    self.dropbox_status = @"Loading ...";
+    self.cloud_status = @"Loading ...";
     [[CloudFactory getCloudManager] loadFileList:^(NSError *error) {
         if( error != nil ) {
             NSLog(@"%@\n", error);
-            self.dropbox_status = [error localizedDescription];
+            self.cloud_status = [error localizedDescription];
         } else {
-            self.dropboxFiles = [NSMutableArray arrayWithArray:[[CloudFactory getCloudManager] getFileList]];
-            if( self.dropboxFiles == nil || [self.dropboxFiles count] == 0 ) {
-                self.dropbox_status = @"No Files Found";
+            self.cloudFiles = [NSMutableArray arrayWithArray:[[CloudFactory getCloudManager] getFileList]];
+            if( self.cloudFiles == nil || [self.cloudFiles count] == 0 ) {
+                self.cloud_status = @"No Files Found";
             } else {
-                self.dropbox_status = nil;
-                [self.dropboxFiles sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+                self.cloud_status = nil;
+                [self.cloudFiles sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
             }
         }
         [self.tableView reloadData];
     }];
 }
 
-- (void)downloadDropboxFile:(NSString *)path {
+- (void)downloadCloudFile:(NSString *)path {
 
     [[CloudFactory getCloudManager] downloadFile:path requestCallback:^(NSError *error) {
         if( error != nil ) {
             NSLog(@"%@\n", error);
-            self.dropbox_status = [error localizedDescription];
+            self.cloud_status = [error localizedDescription];
             [self.tableView reloadData];
         } else {
             // Load the database
-            self.dropbox_status = nil;
+            self.cloud_status = nil;
             [[DatabaseManager sharedInstance] openDatabaseDocument:path animated:YES isCloudBased:YES];
         }
     }];
@@ -206,7 +204,7 @@ enum {
 - (NSString*) tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     switch (section) {
         case SECTION_DROPBOX:
-            return self.dropbox_status;
+            return self.cloud_status;
     }
     return nil;
 }
@@ -215,7 +213,7 @@ enum {
 
  switch (section) {
         case SECTION_DROPBOX:
-            if( self.dropbox_status == nil ) return 0;
+            if( self.cloud_status == nil ) return 0;
             UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
             CGFloat fontHeight = [font lineHeight];
             return fontHeight + 3;
@@ -248,8 +246,9 @@ enum {
             }
             break;
         case SECTION_DROPBOX:
-            if ([[AppSettings sharedInstance] dropboxEnabled]) {
-                return NSLocalizedString(@"Dropbox Files", nil);
+            if ([[AppSettings sharedInstance] cloudEnabled]) {
+                NSArray *cloudNames = [CloudFactory getServiceNameList];
+                return cloudNames[ [[AppSettings sharedInstance] cloudServiceIndex] ];
             }
             break;
     }
@@ -260,7 +259,7 @@ enum {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSUInteger databaseCount = [self.databaseFiles count];
     NSUInteger keyCount = [self.keyFiles count];
-    NSUInteger dropboxCount = [self.dropboxFiles count];
+    NSUInteger dropboxCount = [self.cloudFiles count];
 
     NSInteger n;
     switch (section) {
@@ -279,7 +278,7 @@ enum {
     }
 
     // Show the help view if there are no files and no dropbox status
-    if (databaseCount == 0 && keyCount == 0 && dropboxCount == 0 && self.dropbox_status == nil) {
+    if (databaseCount == 0 && keyCount == 0 && dropboxCount == 0 && self.cloud_status == nil) {
         [self displayInfoView];
     } else {
         [self hideInfoView];
@@ -317,7 +316,7 @@ enum {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
         case SECTION_DROPBOX:
-            filename = [self.dropboxFiles objectAtIndex:indexPath.row];
+            filename = [self.cloudFiles objectAtIndex:indexPath.row];
             cell.textLabel.text = filename;
             cell.textLabel.textColor = [UIColor blueColor];
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -427,8 +426,8 @@ enum {
             }
             break;
         case SECTION_DROPBOX:
-            // Download the database from Dropbox and open it.
-            [self downloadDropboxFile:[self.dropboxFiles objectAtIndex:indexPath.row]];
+            // Download the database from the cloud and open it.
+            [self downloadCloudFile:[self.cloudFiles objectAtIndex:indexPath.row]];
             break;
         default:
             break;

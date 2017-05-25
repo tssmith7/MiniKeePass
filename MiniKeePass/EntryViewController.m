@@ -20,6 +20,7 @@
 #import "AppSettings.h"
 #import "ImageFactory.h"
 #import "WebViewController.h"
+#import "DatabaseManager.h"
 
 #import <MBProgressHUD/MBProgressHUD.h>
 
@@ -273,7 +274,7 @@ enum {
                     [doc.kdbTree createEntryBackup:self.entry backupEntry:originalEntry ];
                     originalEntry = nil;
                 }
-                [doc save];
+                [DatabaseManager saveDatabaseDocument:doc viewController:self andDismiss:NO];
             }
         }
     } else {

@@ -37,7 +37,7 @@ enum {
     SECTION_CLEAR_CLIPBOARD,
     SECTION_BACKUP,
     SECTION_WEB_BROWSER,
-    SECTION_DROPBOX
+    SECTION_CLOUD_SERVICES
 };
 
 enum {
@@ -100,8 +100,9 @@ enum {
 };
 
 enum {
-    ROW_DROPBOX_ENABLED,
-    ROW_DROPBOX_NUMBER
+    ROW_CLOUD_ENABLED,
+    ROW_CLOUD_SERVICE,
+    ROW_CLOUD_NUMBER
 };
 
 @interface SettingsViewController ()
@@ -210,10 +211,14 @@ enum {
                                            action:@selector(toggleWebBrowserIntegrated:)
                                  forControlEvents:UIControlEventValueChanged];
     
-    dropboxEnabledCell = [[SwitchCell alloc] initWithLabel:NSLocalizedString(@"Enable Dropbox", nil)];
-    [dropboxEnabledCell.switchControl addTarget:self
-                                         action:@selector(toggleDropboxEnabled:)
-                                     forControlEvents:UIControlEventValueChanged];
+    cloudEnabledCell = [[SwitchCell alloc] initWithLabel:NSLocalizedString(@"Enabled", nil)];
+    [cloudEnabledCell.switchControl addTarget:self
+                                       action:@selector(toggleCloudEnabled:)
+                             forControlEvents:UIControlEventValueChanged];
+    
+    cloudServiceCell = [[ChoiceCell alloc] initWithLabel:NSLocalizedString(@"Cloud Service", nil)
+                                                 choices:[CloudFactory getServiceNameList]
+                                           selectedIndex:0];
     
     // Add version number to table view footer
     CGFloat viewWidth = CGRectGetWidth(self.tableView.frame);
@@ -259,7 +264,7 @@ enum {
                           [NSNumber numberWithInt:SECTION_CLEAR_CLIPBOARD],
                           [NSNumber numberWithInt:SECTION_BACKUP],
                           [NSNumber numberWithInt:SECTION_WEB_BROWSER],
-                          [NSNumber numberWithInt:SECTION_DROPBOX]
+                          [NSNumber numberWithInt:SECTION_CLOUD_SERVICES]
                           ];
     } else {
         // Skip TouchID in the list of sections
@@ -274,7 +279,7 @@ enum {
                           [NSNumber numberWithInt:SECTION_CLEAR_CLIPBOARD],
                           [NSNumber numberWithInt:SECTION_BACKUP],
                           [NSNumber numberWithInt:SECTION_WEB_BROWSER],
-                          [NSNumber numberWithInt:SECTION_DROPBOX]
+                          [NSNumber numberWithInt:SECTION_CLOUD_SERVICES]
                           ];
     }
 }
@@ -312,7 +317,8 @@ enum {
 
     webBrowserIntegratedCell.switchControl.on = [self.appSettings webBrowserIntegrated];
 
-    dropboxEnabledCell.switchControl.on = [self.appSettings dropboxEnabled];
+    cloudEnabledCell.switchControl.on = [self.appSettings cloudEnabled];
+    [cloudServiceCell setSelectedIndex:[self.appSettings cloudServiceIndex]];
     
     // Update which controls are enabled
     [self updateEnabledControls];
@@ -382,8 +388,8 @@ enum {
         case SECTION_WEB_BROWSER:
             return ROW_WEB_BROWSER_NUMBER;
             
-        case SECTION_DROPBOX:
-            return ROW_DROPBOX_NUMBER;
+        case SECTION_CLOUD_SERVICES:
+            return ROW_CLOUD_NUMBER;
     }
     return 0;
 }
@@ -424,13 +430,15 @@ enum {
         case SECTION_WEB_BROWSER:
             return NSLocalizedString(@"Web Browser", nil);
 
-        case SECTION_DROPBOX:
-            return NSLocalizedString(@"Dropbox Integration", nil);
+        case SECTION_CLOUD_SERVICES:
+            return NSLocalizedString(@"Cloud Service Integration", nil);
 }
     return nil;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    NSDictionary *cloudInfo;
+    
     section = [self mappedSection:section];
     switch (section) {
         case SECTION_PIN:
@@ -466,8 +474,14 @@ enum {
         case SECTION_WEB_BROWSER:
             return NSLocalizedString(@"Switch between an integrated web browser and Safari.", nil);
 
-        case SECTION_DROPBOX:
-            return NSLocalizedString(@"Use direct integration with dropbox account.", nil);
+        case SECTION_CLOUD_SERVICES:
+            if( cloudEnabledCell.switchControl.on ) {
+                cloudInfo = [[CloudFactory getCloudManager] getAccountInformation];
+                if( cloudInfo != nil ) {
+                    return [NSString stringWithFormat:@"Successfully logged in as (%@)", cloudInfo[CLOUD_USER_EMAIL]];
+                }
+            }
+            return NSLocalizedString(@"Use direct integration with a cloud service such as Dropbox.", nil);
     }
     return nil;
 }
@@ -560,10 +574,12 @@ enum {
             }
             break;
 
-        case SECTION_DROPBOX:
+        case SECTION_CLOUD_SERVICES:
             switch (indexPath.row) {
-                case ROW_DROPBOX_ENABLED:
-                    return dropboxEnabledCell;
+                case ROW_CLOUD_ENABLED:
+                    return cloudEnabledCell;
+                case ROW_CLOUD_SERVICE:
+                    return cloudServiceCell;
             }
             break;
 }
@@ -613,6 +629,14 @@ enum {
         selectionListViewController.delegate = self;
         selectionListViewController.reference = indexPath;
         [self.navigationController pushViewController:selectionListViewController animated:YES];
+    } else if (indexPath.section == SECTION_CLOUD_SERVICES && indexPath.row == ROW_CLOUD_SERVICE) {
+        SelectionListViewController *selectionListViewController = [[SelectionListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        selectionListViewController.title = NSLocalizedString(@"Cloud Service Provider", nil);
+        selectionListViewController.items = cloudServiceCell.choices;
+        selectionListViewController.selectedIndex = [self.appSettings cloudServiceIndex];
+        selectionListViewController.delegate = self;
+        selectionListViewController.reference = indexPath;
+        [self.navigationController pushViewController:selectionListViewController animated:YES];
     }
 }
 
@@ -648,6 +672,12 @@ enum {
         
         // Update the cell text
         [clearClipboardTimeoutCell setSelectedIndex:selectedIndex];
+    } else if (indexPath.section == SECTION_CLOUD_SERVICES && indexPath.row == ROW_CLOUD_SERVICE) {
+        // Save the user setting
+        [self.appSettings setCloudServiceIndex:selectedIndex];
+        
+        // Update the cell text
+        [cloudServiceCell setSelectedIndex:selectedIndex];
     }
 }
 
@@ -721,22 +751,23 @@ enum {
     [self.appSettings setWebBrowserIntegrated:webBrowserIntegratedCell.switchControl.on];
 }
 
-- (void)toggleDropboxEnabled:(id)sender {
-    [self.appSettings setDropboxEnabled:dropboxEnabledCell.switchControl.on];
-    if( dropboxEnabledCell.switchControl.on ) {
+- (void)toggleCloudEnabled:(id)sender {
+    [self.appSettings setCloudEnabled:cloudEnabledCell.switchControl.on];
+    if( cloudEnabledCell.switchControl.on ) {
         if( ![[CloudFactory getCloudManager] getAccountAuthorization:[UIApplication sharedApplication]
                                                            controller:self] ) {
-            [self.appSettings setDropboxEnabled:NO];
-            [dropboxEnabledCell.switchControl setOn:NO];
-            dropboxEnabledCell.textLabel.text = NSLocalizedString(@"Dropbox API Error", nil);
+            [self.appSettings setCloudEnabled:NO];
+            [cloudEnabledCell.switchControl setOn:NO];
+            cloudEnabledCell.textLabel.text = NSLocalizedString(@"Service API Error", nil);
         } else {
-            dropboxEnabledCell.textLabel.text = NSLocalizedString(@"Enable Dropbox", nil);
+            cloudEnabledCell.textLabel.text = NSLocalizedString(@"Enabled", nil);
         }
     } else {
-        [KeychainUtils deleteAllForServiceName:KEYCHAIN_OAUTH2_SERVICE];
         [[CloudFactory getCloudManager] resetAccount];
     }
-
+    // Refresh the footer description.
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:SECTION_CLOUD_SERVICES]
+                  withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)toggleBackupDisabled:(id)sender {

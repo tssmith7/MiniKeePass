@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Tait Smith. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,6 @@
 #import <UIKit/UIKit.h>
 #import "CloudManager.h"
 
-typedef void (^DMrequestCallback)(NSError *);
-
-enum {
-    DropboxOK,
-    DropboxNotInitiatized,
-    DropboxNotAuthorized,
-    DropboxUserCanceled,
-    DropboxError,
-    DropboxNotHandled
-};
-
 @interface DropboxManager : CloudManager
 
 // + (DropboxManager *)sharedInstance;
@@ -39,11 +28,11 @@ enum {
 -(uint32_t) accountAuthorizationRedirect:(NSURL*)url;
 -(void) resetAccount;
 
--(void) loadFileList:(DMrequestCallback)requestCallback;
+-(void) loadFileList:(CMrequestCallback)requestCallback;
 -(NSMutableArray *) getFileList;
 -(NSDate *) getFileModifiedDate:(NSString*)file;
--(void) downloadFile:(NSString*)path requestCallback:(DMrequestCallback)requestCallback;
--(void) uploadFile:(NSString*)path requestCallback:(DMrequestCallback)requestCallback;
+-(void) downloadFile:(NSString*)path requestCallback:(CMrequestCallback)requestCallback;
+-(void) uploadFile:(NSString*)path requestCallback:(CMrequestCallback)requestCallback;
 
 /// Factory Methods to get paths and URLs.
 - (NSString *)getLocalPath:(NSString *)filename;
