@@ -155,10 +155,10 @@
 		7832A5091EB001F1001E57F0 /* GroupView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7832A5081EB001F1001E57F0 /* GroupView.storyboard */; };
 		7832A50B1EB006EA001E57F0 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7832A50A1EB006EA001E57F0 /* GroupViewController.swift */; };
 		7832A50D1EB00761001E57F0 /* GroupSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7832A50C1EB00761001E57F0 /* GroupSearchController.swift */; };
-		78CD7C691EA83856005D3F64 /* argon2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C20E41EA72C820089B916 /* argon2iOS.framework */; };
-		78CD7C6A1EA83856005D3F64 /* argon2iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 781C20E41EA72C820089B916 /* argon2iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		78CD7C6E1EA838A1005D3F64 /* ObjectiveDropboxOfficial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781C20B21EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */; };
-		78CD7C6F1EA838A1005D3F64 /* ObjectiveDropboxOfficial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 781C20B21EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78E3BC601ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */; };
+		78E3BC611ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78E3BC6A1ED804B300EBEBDA /* argon2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC691ED8029800EBEBDA /* argon2iOS.framework */; };
+		78E3BC6B1ED804B300EBEBDA /* argon2iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC691ED8029800EBEBDA /* argon2iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,40 +169,47 @@
 			remoteGlobalIDString = D286A7491518C70F00E13FB8;
 			remoteInfo = MBProgressHUD;
 		};
-		781C20B11EA728DE0089B916 /* PBXContainerItemProxy */ = {
+		78E3BC3F1ED7FC3400EBEBDA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */;
+			containerPortal = 526D9FA3167CDC010097213E /* MBProgressHUD.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D104D7A1ACA36CC00973364;
+			remoteInfo = "MBProgressHUD Framework";
+		};
+		78E3BC551ED7FCFA00EBEBDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = F26B75751D7F6AF700714F70;
 			remoteInfo = "ObjectiveDropboxOfficial iOS";
 		};
-		781C20B31EA728DE0089B916 /* PBXContainerItemProxy */ = {
+		78E3BC571ED7FCFA00EBEBDA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */;
+			containerPortal = 78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = F27DE9E21D7FF909003B1CEE;
 			remoteInfo = "ObjectiveDropboxOfficial macOS";
 		};
-		781C20E31EA72C820089B916 /* PBXContainerItemProxy */ = {
+		78E3BC621ED8010100EBEBDA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 781C20DF1EA72C810089B916 /* argon2iOS.xcodeproj */;
+			containerPortal = 78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F26B75741D7F6AF700714F70;
+			remoteInfo = "ObjectiveDropboxOfficial iOS";
+		};
+		78E3BC681ED8029800EBEBDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 78F8028B1E8EE2A50039625E;
 			remoteInfo = argon2iOS;
 		};
-		78CD7C6B1EA83856005D3F64 /* PBXContainerItemProxy */ = {
+		78E3BC6C1ED804B300EBEBDA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 781C20DF1EA72C810089B916 /* argon2iOS.xcodeproj */;
+			containerPortal = 78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 78F8028A1E8EE2A50039625E;
 			remoteInfo = argon2iOS;
-		};
-		78CD7C701EA838A1005D3F64 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F26B75741D7F6AF700714F70;
-			remoteInfo = "ObjectiveDropboxOfficial iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -213,8 +220,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				78CD7C6F1EA838A1005D3F64 /* ObjectiveDropboxOfficial.framework in Embed Frameworks */,
-				78CD7C6A1EA83856005D3F64 /* argon2iOS.framework in Embed Frameworks */,
+				78E3BC611ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Embed Frameworks */,
+				78E3BC6B1ED804B300EBEBDA /* argon2iOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,8 +474,6 @@
 		781C20A51EA71EE40089B916 /* TwoFishInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoFishInputStream.m; sourceTree = "<group>"; };
 		781C20A61EA71EE40089B916 /* TwoFishOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoFishOutputStream.h; sourceTree = "<group>"; };
 		781C20A71EA71EE40089B916 /* TwoFishOutputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoFishOutputStream.m; sourceTree = "<group>"; };
-		781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveDropboxOfficial.xcodeproj; path = "dropbox-sdk-obj-c/Source/ObjectiveDropboxOfficial/ObjectiveDropboxOfficial.xcodeproj"; sourceTree = "<group>"; };
-		781C20DF1EA72C810089B916 /* argon2iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = argon2iOS.xcodeproj; path = "dropbox-sdk-obj-c/Source/ObjectiveDropboxOfficial/../../../phc-winner-argon2/argon2iOS.xcodeproj"; sourceTree = "<group>"; };
 		781C20F11EA738940089B916 /* DropboxDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxDocument.h; sourceTree = "<group>"; };
 		781C20F21EA738950089B916 /* DropboxDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxDocument.m; sourceTree = "<group>"; };
 		781C20F31EA738950089B916 /* DropboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxManager.h; sourceTree = "<group>"; };
@@ -478,6 +483,8 @@
 		7832A5081EB001F1001E57F0 /* GroupView.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GroupView.storyboard; sourceTree = "<group>"; };
 		7832A50A1EB006EA001E57F0 /* GroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		7832A50C1EB00761001E57F0 /* GroupSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupSearchController.swift; sourceTree = "<group>"; };
+		78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveDropboxOfficial.xcodeproj; path = "MBProgressHUD/../dropbox-sdk-obj-c/Source/ObjectiveDropboxOfficial/ObjectiveDropboxOfficial.xcodeproj"; sourceTree = "<group>"; };
+		78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = argon2iOS.xcodeproj; sourceTree = "<group>"; };
 		BDB0FF5D194C7C6F00C44DEF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text; name = nl; path = nl.lproj/AppStore.txt; sourceTree = "<group>"; };
 		BDB0FF5E194C7C6F00C44DEF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BDB0FF5F194C7C6F00C44DEF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -493,11 +500,11 @@
 				526D9FAD167CDC2E0097213E /* libMBProgressHUD.a in Frameworks */,
 				689D000D13A42765005EBD36 /* AudioToolbox.framework in Frameworks */,
 				689DFFDE13A4273F005EBD36 /* CoreGraphics.framework in Frameworks */,
+				78E3BC6A1ED804B300EBEBDA /* argon2iOS.framework in Frameworks */,
 				689DFFDC13A4273F005EBD36 /* Foundation.framework in Frameworks */,
-				78CD7C6E1EA838A1005D3F64 /* ObjectiveDropboxOfficial.framework in Frameworks */,
+				78E3BC601ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Frameworks */,
 				6802C36F1A425D7300595AC9 /* LocalAuthentication.framework in Frameworks */,
 				68EBC2D61613394D00E8E799 /* QuartzCore.framework in Frameworks */,
-				78CD7C691EA83856005D3F64 /* argon2iOS.framework in Frameworks */,
 				689D000F13A42777005EBD36 /* Security.framework in Frameworks */,
 				689DFFDA13A4273F005EBD36 /* UIKit.framework in Frameworks */,
 				689D001113A4277E005EBD36 /* libxml2.dylib in Frameworks */,
@@ -536,6 +543,7 @@
 			isa = PBXGroup;
 			children = (
 				526D9FAB167CDC010097213E /* libMBProgressHUD.a */,
+				78E3BC401ED7FC3400EBEBDA /* MBProgressHUD.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -791,9 +799,9 @@
 				689DFFD813A4273F005EBD36 /* Frameworks */,
 				689D041413A42B85005EBD36 /* Resources */,
 				689DFFD613A4273F005EBD36 /* Products */,
-				781C20DF1EA72C810089B916 /* argon2iOS.xcodeproj */,
+				78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */,
 				526D9FA3167CDC010097213E /* MBProgressHUD.xcodeproj */,
-				781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */,
+				78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1022,23 +1030,6 @@
 			name = Crypto;
 			sourceTree = "<group>";
 		};
-		781C20AC1EA728DD0089B916 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				781C20B21EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */,
-				781C20B41EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		781C20E01EA72C810089B916 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				781C20E41EA72C820089B916 /* argon2iOS.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		782940E01EA5915100B5559C /* Database Options View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1046,6 +1037,23 @@
 				782940EA1EA5DBE300B5559C /* DBOptionsViewController.swift */,
 			);
 			name = "Database Options View";
+			sourceTree = "<group>";
+		};
+		78E3BC511ED7FCFA00EBEBDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */,
+				78E3BC581ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		78E3BC651ED8029700EBEBDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				78E3BC691ED8029800EBEBDA /* argon2iOS.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1064,8 +1072,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				78CD7C6C1EA83856005D3F64 /* PBXTargetDependency */,
-				78CD7C711EA838A1005D3F64 /* PBXTargetDependency */,
+				78E3BC631ED8010100EBEBDA /* PBXTargetDependency */,
+				78E3BC6D1ED804B300EBEBDA /* PBXTargetDependency */,
 			);
 			name = MiniKeePass;
 			productName = MiniKeePass;
@@ -1114,16 +1122,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 781C20E01EA72C810089B916 /* Products */;
-					ProjectRef = 781C20DF1EA72C810089B916 /* argon2iOS.xcodeproj */;
+					ProductGroup = 78E3BC651ED8029700EBEBDA /* Products */;
+					ProjectRef = 78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */;
 				},
 				{
 					ProductGroup = 526D9FA4167CDC010097213E /* Products */;
 					ProjectRef = 526D9FA3167CDC010097213E /* MBProgressHUD.xcodeproj */;
 				},
 				{
-					ProductGroup = 781C20AC1EA728DD0089B916 /* Products */;
-					ProjectRef = 781C20AB1EA728DD0089B916 /* ObjectiveDropboxOfficial.xcodeproj */;
+					ProductGroup = 78E3BC511ED7FCFA00EBEBDA /* Products */;
+					ProjectRef = 78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1141,25 +1149,32 @@
 			remoteRef = 526D9FAA167CDC010097213E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		781C20B21EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */ = {
+		78E3BC401ED7FC3400EBEBDA /* MBProgressHUD.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MBProgressHUD.framework;
+			remoteRef = 78E3BC3F1ED7FC3400EBEBDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ObjectiveDropboxOfficial.framework;
-			remoteRef = 781C20B11EA728DE0089B916 /* PBXContainerItemProxy */;
+			remoteRef = 78E3BC551ED7FCFA00EBEBDA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		781C20B41EA728DE0089B916 /* ObjectiveDropboxOfficial.framework */ = {
+		78E3BC581ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ObjectiveDropboxOfficial.framework;
-			remoteRef = 781C20B31EA728DE0089B916 /* PBXContainerItemProxy */;
+			remoteRef = 78E3BC571ED7FCFA00EBEBDA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		781C20E41EA72C820089B916 /* argon2iOS.framework */ = {
+		78E3BC691ED8029800EBEBDA /* argon2iOS.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = argon2iOS.framework;
-			remoteRef = 781C20E31EA72C820089B916 /* PBXContainerItemProxy */;
+			remoteRef = 78E3BC681ED8029800EBEBDA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1340,15 +1355,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		78CD7C6C1EA83856005D3F64 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = argon2iOS;
-			targetProxy = 78CD7C6B1EA83856005D3F64 /* PBXContainerItemProxy */;
-		};
-		78CD7C711EA838A1005D3F64 /* PBXTargetDependency */ = {
+		78E3BC631ED8010100EBEBDA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ObjectiveDropboxOfficial iOS";
-			targetProxy = 78CD7C701EA838A1005D3F64 /* PBXContainerItemProxy */;
+			targetProxy = 78E3BC621ED8010100EBEBDA /* PBXContainerItemProxy */;
+		};
+		78E3BC6D1ED804B300EBEBDA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = argon2iOS;
+			targetProxy = 78E3BC6C1ED804B300EBEBDA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1501,7 +1516,7 @@
 				INFOPLIST_FILE = "MiniKeePass/MiniKeePass-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.MiniKeePass;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.MiniKeePassS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1509,6 +1524,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "./phc-winner-argon2";
 			};
 			name = Debug;
 		};
@@ -1524,13 +1540,14 @@
 				INFOPLIST_FILE = "MiniKeePass/MiniKeePass-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.MiniKeePass;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.MiniKeePassS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MiniKeePass/MiniKeePass-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "./phc-winner-argon2";
 			};
 			name = Release;
 		};

@@ -38,7 +38,8 @@
         cipher = [[TwoFishCipher alloc] init:key iv:iv];
         
         bufferOffset = 0;
-        bufferLength = 1024*64*TWOFISH_BLOCK_SIZE;
+        bufferLength = 64*TWOFISH_BLOCK_SIZE;
+//        bufferLength = 1024*64*TWOFISH_BLOCK_SIZE;
         buffer = malloc(bufferLength);
     }
     return self;

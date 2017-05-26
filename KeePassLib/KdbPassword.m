@@ -8,8 +8,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
-
-#import "../phc-winner-argon2/include/argon2.h"
+#import "include/argon2.h"
 
 #import "Kdb4Node.h"
 #import "KdbPassword.h"
@@ -122,7 +121,7 @@ int hex2dec(char c);
         
         size_t tmp;
         NSNumber *rounds = kdfparams[KDF_AES_KEY_ROUNDS];
-        for (int i = 0; i < [rounds longLongValue]; i++) {
+        for (uint64_t i = 0; i < [rounds unsignedLongLongValue]; i++) {
             CCCryptorUpdate(cryptorRef, masterKey, 32, masterKey, 32, &tmp);
         }
         
@@ -142,11 +141,6 @@ int hex2dec(char c);
     } else {
         @throw [NSException exceptionWithName:@"CryptoException" reason:@"Unknown Algorithm" userInfo:nil];
     }
-
-/*
-    uint8_t transformedKey[32];
-    CC_SHA256(masterKey, 32, transformedKey);
-*/
     
     // Hash the master seed with the transformed key into the final key
     uint8_t finalKey[32];
@@ -155,17 +149,9 @@ int hex2dec(char c);
     memcpy( key64, masterSeed, 32 );
     memcpy( &key64[32], masterKey, 32 );
     key64[64] = 1;
-/*
-    CC_SHA256_CTX ctx;
-    CC_SHA256_Init(&ctx);
-    CC_SHA256_Update(&ctx, masterSeed, 32);
-    CC_SHA256_Update(&ctx, masterKey, 32);
-    CC_SHA256_Final(finalKey, &ctx);
-*/
+
     CC_SHA256( key64, 64, finalKey );
 
-    // Find the HmacKey64
- 
     // Hash the extended cipher key
     CC_SHA512(key64, 65, hmackey64);
     
@@ -225,13 +211,14 @@ int hex2dec(char c);
         @throw [NSException exceptionWithName:@"CryptoException" reason:@"Argon2 salt not set" userInfo:nil];
     } else {
         if( [kdf[KDF_ARGON2_KEY_SALT] length] != 32 ) {
-            @throw [NSException exceptionWithName:@"CryptoException" reason:@"Argon2 salt not 12 bytes" userInfo:nil];
+            @throw [NSException exceptionWithName:@"CryptoException" reason:@"Argon2 salt not 32 bytes" userInfo:nil];
         }
     }
     
 }
 
-+(VariantDictionary *) getDefaultKDFParameters:(KdbUUID*)uuid {
++ (VariantDictionary *) getDefaultKDFParameters:(KdbUUID*)uuid {
+    
     VariantDictionary *kdf = [[VariantDictionary alloc] init];
     
     [kdf addByteArray:[uuid getData] forKey:KDF_KEY_UUID_BYTES];
@@ -249,6 +236,7 @@ int hex2dec(char c);
     } else {
         @throw [NSException exceptionWithName:@"CryptoException" reason:@"Unknown Algorithm" userInfo:nil];
     }
+    
     return kdf;
 }
 

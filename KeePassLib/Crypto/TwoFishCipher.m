@@ -248,21 +248,7 @@ static BOOL g_bInitialized = NO;
         iv = pInput;
         pInput += TWOFISH_BLOCK_SIZE;
     }
-/*
-    padLen = TWOFISH_BLOCK_SIZE - (int)(cb - (TWOFISH_BLOCK_SIZE * numBlocks));
-    
-    for (i = 0; i < TWOFISH_BLOCK_SIZE - padLen; i++)
-    {
-        block[i] = (uint8_t)(pInput[i] ^ iv[i]);
-    }
-    
-    for (i = TWOFISH_BLOCK_SIZE - padLen; i < TWOFISH_BLOCK_SIZE; i++)
-    {
-        block[i] = (uint8_t)((uint8_t)padLen ^ iv[i]);
-    }
-    
-    Twofish_encrypt(&m_key, (Twofish_Byte *)block, (Twofish_Byte *)pInput);
-*/
+    memcpy(ivec, iv, TWOFISH_BLOCK_SIZE);
 }
 
 -(void) Decrypt:(void *)m iOffset:(size_t)iOffset count:(size_t)cb {
@@ -318,7 +304,7 @@ static BOOL g_bInitialized = NO;
         }
     }
     memcpy(pInput, block, TWOFISH_BLOCK_SIZE);
-    
+    memcpy(ivec, iv, TWOFISH_BLOCK_SIZE);
 }
 
 @end

@@ -7,41 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		781C20B61EA72B210089B916 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20B51EA72B210089B916 /* argon2.h */; };
-		781C20B81EA72B500089B916 /* argon2.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20B71EA72B500089B916 /* argon2.c */; };
-		781C20BE1EA72B650089B916 /* blake2-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20B91EA72B650089B916 /* blake2-impl.h */; };
-		781C20BF1EA72B650089B916 /* blake2.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20BA1EA72B650089B916 /* blake2.h */; };
-		781C20C01EA72B650089B916 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20BB1EA72B650089B916 /* blake2b.c */; };
-		781C20C11EA72B650089B916 /* blamka-round-opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20BC1EA72B650089B916 /* blamka-round-opt.h */; };
-		781C20C21EA72B650089B916 /* blamka-round-ref.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20BD1EA72B650089B916 /* blamka-round-ref.h */; };
-		781C20CA1EA72B7E0089B916 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20C31EA72B7E0089B916 /* core.c */; };
-		781C20CB1EA72B7E0089B916 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20C41EA72B7E0089B916 /* core.h */; };
-		781C20CC1EA72B7E0089B916 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20C51EA72B7E0089B916 /* encoding.c */; };
-		781C20CD1EA72B7E0089B916 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20C61EA72B7E0089B916 /* encoding.h */; };
-		781C20CE1EA72B7E0089B916 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20C71EA72B7E0089B916 /* ref.c */; };
-		781C20CF1EA72B7E0089B916 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 781C20C81EA72B7E0089B916 /* thread.c */; };
-		781C20D01EA72B7E0089B916 /* thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 781C20C91EA72B7E0089B916 /* thread.h */; };
-		78F8029C1E8EE2A50039625E /* argon2iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 78F8028E1E8EE2A50039625E /* argon2iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78477A2A1ED2A95E001F6438 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A291ED2A95E001F6438 /* argon2.h */; };
+		78477A331ED2A990001F6438 /* argon2.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A2B1ED2A990001F6438 /* argon2.c */; };
+		78477A341ED2A990001F6438 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A2C1ED2A990001F6438 /* core.c */; };
+		78477A351ED2A990001F6438 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A2D1ED2A990001F6438 /* core.h */; };
+		78477A361ED2A990001F6438 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A2E1ED2A990001F6438 /* encoding.c */; };
+		78477A371ED2A990001F6438 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A2F1ED2A990001F6438 /* encoding.h */; };
+		78477A381ED2A990001F6438 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A301ED2A990001F6438 /* ref.c */; };
+		78477A391ED2A990001F6438 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A311ED2A990001F6438 /* thread.c */; };
+		78477A3A1ED2A990001F6438 /* thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A321ED2A990001F6438 /* thread.h */; };
+		78477A401ED2A9B4001F6438 /* blake2-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3B1ED2A9B4001F6438 /* blake2-impl.h */; };
+		78477A411ED2A9B4001F6438 /* blake2.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3C1ED2A9B4001F6438 /* blake2.h */; };
+		78477A421ED2A9B4001F6438 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 78477A3D1ED2A9B4001F6438 /* blake2b.c */; };
+		78477A431ED2A9B4001F6438 /* blamka-round-opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3E1ED2A9B4001F6438 /* blamka-round-opt.h */; };
+		78477A441ED2A9B4001F6438 /* blamka-round-ref.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A3F1ED2A9B4001F6438 /* blamka-round-ref.h */; };
+		78477A4B1ED2AB10001F6438 /* argon2iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 78477A491ED2AB10001F6438 /* argon2iOS.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		781C20B51EA72B210089B916 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = argon2.h; path = include/argon2.h; sourceTree = SOURCE_ROOT; };
-		781C20B71EA72B500089B916 /* argon2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = argon2.c; path = src/argon2.c; sourceTree = SOURCE_ROOT; };
-		781C20B91EA72B650089B916 /* blake2-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blake2-impl.h"; path = "src/blake2/blake2-impl.h"; sourceTree = SOURCE_ROOT; };
-		781C20BA1EA72B650089B916 /* blake2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blake2.h; path = src/blake2/blake2.h; sourceTree = SOURCE_ROOT; };
-		781C20BB1EA72B650089B916 /* blake2b.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blake2b.c; path = src/blake2/blake2b.c; sourceTree = SOURCE_ROOT; };
-		781C20BC1EA72B650089B916 /* blamka-round-opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blamka-round-opt.h"; path = "src/blake2/blamka-round-opt.h"; sourceTree = SOURCE_ROOT; };
-		781C20BD1EA72B650089B916 /* blamka-round-ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blamka-round-ref.h"; path = "src/blake2/blamka-round-ref.h"; sourceTree = SOURCE_ROOT; };
-		781C20C31EA72B7E0089B916 /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core.c; path = src/core.c; sourceTree = SOURCE_ROOT; };
-		781C20C41EA72B7E0089B916 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core.h; path = src/core.h; sourceTree = SOURCE_ROOT; };
-		781C20C51EA72B7E0089B916 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = encoding.c; path = src/encoding.c; sourceTree = SOURCE_ROOT; };
-		781C20C61EA72B7E0089B916 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = encoding.h; path = src/encoding.h; sourceTree = SOURCE_ROOT; };
-		781C20C71EA72B7E0089B916 /* ref.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ref.c; path = src/ref.c; sourceTree = SOURCE_ROOT; };
-		781C20C81EA72B7E0089B916 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = thread.c; path = src/thread.c; sourceTree = SOURCE_ROOT; };
-		781C20C91EA72B7E0089B916 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = src/thread.h; sourceTree = SOURCE_ROOT; };
+		78477A291ED2A95E001F6438 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = argon2.h; path = "phc-winner-argon2/include/argon2.h"; sourceTree = SOURCE_ROOT; };
+		78477A2B1ED2A990001F6438 /* argon2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = argon2.c; path = "phc-winner-argon2/src/argon2.c"; sourceTree = SOURCE_ROOT; };
+		78477A2C1ED2A990001F6438 /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core.c; path = "phc-winner-argon2/src/core.c"; sourceTree = SOURCE_ROOT; };
+		78477A2D1ED2A990001F6438 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core.h; path = "phc-winner-argon2/src/core.h"; sourceTree = SOURCE_ROOT; };
+		78477A2E1ED2A990001F6438 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = encoding.c; path = "phc-winner-argon2/src/encoding.c"; sourceTree = SOURCE_ROOT; };
+		78477A2F1ED2A990001F6438 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = encoding.h; path = "phc-winner-argon2/src/encoding.h"; sourceTree = SOURCE_ROOT; };
+		78477A301ED2A990001F6438 /* ref.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ref.c; path = "phc-winner-argon2/src/ref.c"; sourceTree = SOURCE_ROOT; };
+		78477A311ED2A990001F6438 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = thread.c; path = "phc-winner-argon2/src/thread.c"; sourceTree = SOURCE_ROOT; };
+		78477A321ED2A990001F6438 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = "phc-winner-argon2/src/thread.h"; sourceTree = SOURCE_ROOT; };
+		78477A3B1ED2A9B4001F6438 /* blake2-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blake2-impl.h"; path = "phc-winner-argon2/src/blake2/blake2-impl.h"; sourceTree = SOURCE_ROOT; };
+		78477A3C1ED2A9B4001F6438 /* blake2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blake2.h; path = "phc-winner-argon2/src/blake2/blake2.h"; sourceTree = SOURCE_ROOT; };
+		78477A3D1ED2A9B4001F6438 /* blake2b.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blake2b.c; path = "phc-winner-argon2/src/blake2/blake2b.c"; sourceTree = SOURCE_ROOT; };
+		78477A3E1ED2A9B4001F6438 /* blamka-round-opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blamka-round-opt.h"; path = "phc-winner-argon2/src/blake2/blamka-round-opt.h"; sourceTree = SOURCE_ROOT; };
+		78477A3F1ED2A9B4001F6438 /* blamka-round-ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "blamka-round-ref.h"; path = "phc-winner-argon2/src/blake2/blamka-round-ref.h"; sourceTree = SOURCE_ROOT; };
+		78477A491ED2AB10001F6438 /* argon2iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argon2iOS.h; sourceTree = "<group>"; };
+		78477A4A1ED2AB10001F6438 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78F8028B1E8EE2A50039625E /* argon2iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = argon2iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		78F8028E1E8EE2A50039625E /* argon2iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = argon2iOS.h; sourceTree = "<group>"; };
-		78F8028F1E8EE2A50039625E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +76,8 @@
 		78F8028D1E8EE2A50039625E /* argon2iOS */ = {
 			isa = PBXGroup;
 			children = (
-				78F8028E1E8EE2A50039625E /* argon2iOS.h */,
-				78F8028F1E8EE2A50039625E /* Info.plist */,
+				78477A491ED2AB10001F6438 /* argon2iOS.h */,
+				78477A4A1ED2AB10001F6438 /* Info.plist */,
 			);
 			path = argon2iOS;
 			sourceTree = "<group>";
@@ -85,15 +85,15 @@
 		78F802A51E8EE2BE0039625E /* src */ = {
 			isa = PBXGroup;
 			children = (
-				781C20B71EA72B500089B916 /* argon2.c */,
 				78F802A81E8EE2BE0039625E /* blake2 */,
-				781C20C31EA72B7E0089B916 /* core.c */,
-				781C20C41EA72B7E0089B916 /* core.h */,
-				781C20C51EA72B7E0089B916 /* encoding.c */,
-				781C20C61EA72B7E0089B916 /* encoding.h */,
-				781C20C71EA72B7E0089B916 /* ref.c */,
-				781C20C81EA72B7E0089B916 /* thread.c */,
-				781C20C91EA72B7E0089B916 /* thread.h */,
+				78477A2B1ED2A990001F6438 /* argon2.c */,
+				78477A2C1ED2A990001F6438 /* core.c */,
+				78477A2D1ED2A990001F6438 /* core.h */,
+				78477A2E1ED2A990001F6438 /* encoding.c */,
+				78477A2F1ED2A990001F6438 /* encoding.h */,
+				78477A301ED2A990001F6438 /* ref.c */,
+				78477A311ED2A990001F6438 /* thread.c */,
+				78477A321ED2A990001F6438 /* thread.h */,
 			);
 			name = src;
 			path = ../../src;
@@ -102,11 +102,11 @@
 		78F802A81E8EE2BE0039625E /* blake2 */ = {
 			isa = PBXGroup;
 			children = (
-				781C20B91EA72B650089B916 /* blake2-impl.h */,
-				781C20BA1EA72B650089B916 /* blake2.h */,
-				781C20BB1EA72B650089B916 /* blake2b.c */,
-				781C20BC1EA72B650089B916 /* blamka-round-opt.h */,
-				781C20BD1EA72B650089B916 /* blamka-round-ref.h */,
+				78477A3B1ED2A9B4001F6438 /* blake2-impl.h */,
+				78477A3C1ED2A9B4001F6438 /* blake2.h */,
+				78477A3D1ED2A9B4001F6438 /* blake2b.c */,
+				78477A3E1ED2A9B4001F6438 /* blamka-round-opt.h */,
+				78477A3F1ED2A9B4001F6438 /* blamka-round-ref.h */,
 			);
 			path = blake2;
 			sourceTree = "<group>";
@@ -114,7 +114,7 @@
 		78F802CD1E8EE2D00039625E /* include */ = {
 			isa = PBXGroup;
 			children = (
-				781C20B51EA72B210089B916 /* argon2.h */,
+				78477A291ED2A95E001F6438 /* argon2.h */,
 			);
 			name = include;
 			path = ../../include;
@@ -127,15 +127,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				781C20CD1EA72B7E0089B916 /* encoding.h in Headers */,
-				781C20BF1EA72B650089B916 /* blake2.h in Headers */,
-				78F8029C1E8EE2A50039625E /* argon2iOS.h in Headers */,
-				781C20D01EA72B7E0089B916 /* thread.h in Headers */,
-				781C20C11EA72B650089B916 /* blamka-round-opt.h in Headers */,
-				781C20B61EA72B210089B916 /* argon2.h in Headers */,
-				781C20C21EA72B650089B916 /* blamka-round-ref.h in Headers */,
-				781C20BE1EA72B650089B916 /* blake2-impl.h in Headers */,
-				781C20CB1EA72B7E0089B916 /* core.h in Headers */,
+				78477A411ED2A9B4001F6438 /* blake2.h in Headers */,
+				78477A371ED2A990001F6438 /* encoding.h in Headers */,
+				78477A431ED2A9B4001F6438 /* blamka-round-opt.h in Headers */,
+				78477A2A1ED2A95E001F6438 /* argon2.h in Headers */,
+				78477A441ED2A9B4001F6438 /* blamka-round-ref.h in Headers */,
+				78477A3A1ED2A990001F6438 /* thread.h in Headers */,
+				78477A4B1ED2AB10001F6438 /* argon2iOS.h in Headers */,
+				78477A351ED2A990001F6438 /* core.h in Headers */,
+				78477A401ED2A9B4001F6438 /* blake2-impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,12 +207,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				781C20CE1EA72B7E0089B916 /* ref.c in Sources */,
-				781C20B81EA72B500089B916 /* argon2.c in Sources */,
-				781C20CF1EA72B7E0089B916 /* thread.c in Sources */,
-				781C20CA1EA72B7E0089B916 /* core.c in Sources */,
-				781C20CC1EA72B7E0089B916 /* encoding.c in Sources */,
-				781C20C01EA72B650089B916 /* blake2b.c in Sources */,
+				78477A341ED2A990001F6438 /* core.c in Sources */,
+				78477A421ED2A9B4001F6438 /* blake2b.c in Sources */,
+				78477A381ED2A990001F6438 /* ref.c in Sources */,
+				78477A361ED2A990001F6438 /* encoding.c in Sources */,
+				78477A331ED2A990001F6438 /* argon2.c in Sources */,
+				78477A391ED2A990001F6438 /* thread.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +261,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -307,7 +307,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

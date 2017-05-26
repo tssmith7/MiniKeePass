@@ -21,11 +21,9 @@
 #import "KdbPassword.h"
 #import "DataOutputStream.h"
 #import "CipherStreamFactory.h"
-//#import "AesOutputStream.h"
 #import "HashedOutputStream.h"
 #import "HmacInputStream.h"
 #import "HmacOutputStream.h"
-//#import "ChaCha20OutputStream.h"
 #import "GZipOutputStream.h"
 #import "Salsa20RandomStream.h"
 #import "ChaCha20RandomStream.h"
@@ -48,7 +46,6 @@
     self = [super init];
     if (self) {
         masterSeed = [Utils randomBytes:32];
-//        transformSeed = [Utils randomBytes:32];
         protectedStreamKey = [Utils randomBytes:32];
         streamStartBytes = [Utils randomBytes:32];
     }
@@ -94,24 +91,13 @@
 
     // Compute a hash of the header data
     NSData *headerBytes = [[NSData alloc] initWithData:outputStream.data];
-    
-//    printf( "HEADER BYTES\n%s\n" , [[Utils hexDumpData:headerBytes] UTF8String] );
     tree.headerHash = [self computeHashOfHeaderData:headerBytes];
     
     // Create the encryption output stream
-/*
-    uint64_t rounds = [tree.kdfParams[KDF_AES_KEY_ROUNDS] longLongValue];
-    NSData *key = [kdbPassword createFinalKeyForVersion:4 masterSeed:masterSeed transformSeed:transformSeed rounds:rounds];
-*/
-    
     NSData *key = [kdbPassword createFinalKeyKDBX4:tree.kdfParams masterSeed:mseed HmacKey64:hmackey64 ];
-
-//    printf( "HMAC SEED\n%s\n" , [[Utils hexDumpBytes:hmackey64 length:64] UTF8String] );
-
     OutputStream *stream;
     RandomStream *randomStream;
     if( dbVersion < KDBX40_VERSION ) {   // KDBX 3.1
-//        AesOutputStream *aesOutputStream = [[AesOutputStream alloc] initWithOutputStream:outputStream key:key iv:encryptionIv];
         stream = [CipherStreamFactory getOutputStream:tree.encryptionAlgorithm stream:outputStream key:key iv:encryptionIv];
         
         // Write the stream start bytes
@@ -129,9 +115,6 @@
         
         // Write the HMAC-SHA-256 of the header bytes
         NSData *hmacKey = [HmacInputStream getHMACKey:(void *)hmackey64 keylen:64 blockIndex:ULLONG_MAX];
-
-//        printf( "HMAC KEY\n%s\n" , [[Utils hexDumpData:hmacKey] UTF8String] );
-
         CCHmac(kCCHmacAlgSHA256, hmacKey.bytes, hmacKey.length, headerBytes.bytes, (size_t)headerBytes.length, headerHmac);
         [outputStream write:headerHmac length:CC_SHA256_DIGEST_LENGTH];
         
@@ -140,10 +123,10 @@
         HmacOutputStream *hmacStream = [[HmacOutputStream alloc] initWithOutputStream:outputStream key:hmacKeyData];
         
         // Create the encrypted input stream
-//        stream = [[ChaCha20OutputStream alloc] initWithOutputStream:hmacStream key:key iv:encryptionIv];
         stream = [CipherStreamFactory getOutputStream:tree.encryptionAlgorithm stream:hmacStream key:key iv:encryptionIv];
         
-        // Create the random stream
+        // Create the random stream, need a longer seed.
+        protectedStreamKey = [Utils randomBytes:64];
         randomStream = [[ChaCha20RandomStream alloc] init:protectedStreamKey];
     }
     
@@ -216,7 +199,7 @@
         
         [self writeHeaderField:outputStream headerId:HEADER_TRANSFORMSEED data:seedData.bytes length:seedData.length];
         
-        uint64_t rounds = [tree.kdfParams[ KDF_AES_KEY_ROUNDS ] longLongValue];
+        uint64_t rounds = [tree.kdfParams[ KDF_AES_KEY_ROUNDS ] unsignedLongLongValue];
         i64 = CFSwapInt64HostToLittle(rounds);
         [self writeHeaderField:outputStream headerId:HEADER_TRANSFORMROUNDS data:&i64 length:8];
     } else {
@@ -258,7 +241,6 @@
     i32 = CFSwapInt32HostToLittle(CSR_CHACHA20);
     [self writeHeaderField:outputStream headerId:INNER_HEADER_RANDOMSTREAMID data:&i32 length:4];
 
-    protectedStreamKey = [Utils randomBytes:64];
     [self writeHeaderField:outputStream headerId:INNER_HEADER_RANDOMSTREAMKEY data:protectedStreamKey.bytes length:protectedStreamKey.length];
 
     for( NSData *bdata in tree.headerBinaries ) {
@@ -362,18 +344,18 @@
         return KDBX40_VERSION;
     }
     
-    if( [self treeHasCustomData:(Kdb4Group*)tree.root] ){
+    if( [self groupsHaveCustomData:(Kdb4Group*)tree.root] ){
         return KDBX40_VERSION;
     }
     
     return KDBX31_VERSION;
 }
 
--(BOOL) treeHasCustomData:(Kdb4Group*) group {
+-(BOOL) groupsHaveCustomData:(Kdb4Group*) group {
     if( [group.customData count] > 0 ) return YES;
     
     for( Kdb4Group* g in group.groups ) {
-        return [self treeHasCustomData:g];
+        if( [self groupsHaveCustomData:g] ) return YES;
     }
     
     for( Kdb4Entry* e in group.entries ) {

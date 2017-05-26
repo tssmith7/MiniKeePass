@@ -38,6 +38,8 @@ enum {
     PasswordFieldCell *passwordCell;
     UrlFieldCell *urlCell;
     TextViewCell *commentsCell;
+    
+    KdbEntry *originalEntry;
 }
 
 @property (nonatomic) BOOL isKdb4;
@@ -224,12 +226,13 @@ enum {
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated canceled:(BOOL)canceled {
     [super setEditing:editing animated:animated];
-
+    
     // Ensure that all updates happen at once
     [self.tableView beginUpdates];
-
+    
     if (editing == NO) {
         if (canceled) {
+            originalEntry = nil;
             [self setEntry:self.entry];
         } else {
             self.entry.title = titleCell.textField.text;
@@ -240,7 +243,7 @@ enum {
             self.entry.notes = commentsCell.textView.text;
             self.entry.lastModificationTime = [NSDate date];
             [self updateFilledCells];
-
+            
             if (self.isKdb4) {
                 // Ensure any textfield currently being edited is saved
                 NSInteger count = [self.tableView numberOfRowsInSection:SECTION_CUSTOM_FIELDS] - 1;
@@ -248,51 +251,65 @@ enum {
                     TextFieldCell *cell = (TextFieldCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:SECTION_CUSTOM_FIELDS]];
                     [cell.textField resignFirstResponder];
                 }
-
+                
                 Kdb4Entry *kdb4Entry = (Kdb4Entry *)self.entry;
                 [kdb4Entry.stringFields removeAllObjects];
                 [kdb4Entry.stringFields addObjectsFromArray:self.editingStringFields];
+                
             }
-
-            // Save the database document
-            [[MiniKeePassAppDelegate appDelegate].databaseDocument save];
+            
+            DatabaseDocument *doc = [MiniKeePassAppDelegate appDelegate].databaseDocument;
+            // Save the database document if entry was changed.
+            if( [self.entry hasChanged:originalEntry] ) {
+                if( originalEntry != nil ) {
+                    // Add edits to the history
+                    [doc.kdbTree createEntryBackup:self.entry backupEntry:originalEntry ];
+                    originalEntry = nil;
+                }
+                [doc save];
+            }
+        }
+    } else {
+        // Save the original state of the entry to know if changes were made.
+        if( !self.isNewEntry ) {
+            originalEntry = [self.entry deepCopy];
         }
     }
-
+    
     // Index paths for cells to be added or removed
     NSMutableArray *paths = [NSMutableArray array];
-
+    
     // Manage default cells
     for (TextFieldCell *cell in self.defaultCells) {
         cell.textField.enabled = editing;
-
+        
         // Add empty cells to the list of cells that need to be added/deleted when changing between editing
         if (cell.textField.text.length == 0) {
             [paths addObject:[NSIndexPath indexPathForRow:[self.defaultCells indexOfObject:cell] inSection:0]];
         }
     }
-
+    
     [self.editingStringFields removeAllObjects];
     [self.editingStringFields addObjectsFromArray:[self.entryStringFields copy]];
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:SECTION_CUSTOM_FIELDS] withRowAnimation:UITableViewRowAnimationFade];
-
+    
     if (editing) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed)];
         self.navigationItem.leftBarButtonItem = cancelButton;
-
+        
         titleCell.imageButton.adjustsImageWhenHighlighted = YES;
         commentsCell.textView.editable = YES;
-
+        
         [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
     } else {
         self.navigationItem.leftBarButtonItem = nil;
-
+        
         titleCell.imageButton.adjustsImageWhenHighlighted = NO;
         commentsCell.textView.editable = NO;
-
+        
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
     }
-
+    
     // Commit all updates
     [self.tableView endUpdates];
 }
@@ -651,8 +668,8 @@ enum {
 	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
 	hud.mode = MBProgressHUDModeText;
-    hud.detailsLabelText = self.entry.password;
-    hud.detailsLabelFont = [UIFont fontWithName:@"Andale Mono" size:24];
+    hud.detailsLabel.text = self.entry.password;
+    hud.detailsLabel.font = [UIFont fontWithName:@"Andale Mono" size:24];
 	hud.margin = 10.f;
 	hud.removeFromSuperViewOnHide = YES;
     [hud addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:hud action:@selector(hide:)]];

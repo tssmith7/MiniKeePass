@@ -289,16 +289,17 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
             }
         }
 
+        let databaseDocument = MiniKeePassAppDelegate().databaseDocument;
         // Remove the groups
         for group in groupsToDelete {
             groups.removeObject(group)
-            parentGroup.removeGroup(group)
+            databaseDocument?.kdbTree.remove(group)
         }
 
         // Remove the entries
         for entry in entriesToDelete {
             entries.removeObject(entry)
-            parentGroup.removeEntry(entry)
+            databaseDocument?.kdbTree.remove(entry)
         }
 
         // Save the database
@@ -385,7 +386,7 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
             self.parentGroup.addGroup(group)
 
             // Save the database
-            databaseDocument.save()
+//            databaseDocument.save()
 
             // Add the group to the model
             let index = self.groups.insertionIndexOf(group) {
@@ -418,7 +419,7 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         parentGroup.addEntry(entry)
 
         // Save the database
-        databaseDocument.save()
+//        databaseDocument.save()
 
         // Add the entry to the model
         let index = self.entries.insertionIndexOf(entry) {
