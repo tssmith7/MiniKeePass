@@ -204,14 +204,10 @@ const NSString *DB_REVISION_CODE = @"revision_code";
 - (void)initializeDropboxRevisions {
 
     // Create temp directory if it doesn't exist
+    [self createDropboxTempDir];
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *temp_dir = [self getLocalURL:@""];
     NSError *fm_err;
-    if( ![fileManager createDirectoryAtURL:temp_dir withIntermediateDirectories:YES attributes:nil error:&fm_err ]) {
-        printf("Cannot create temp directory for dropbox!\n");
-        NSLog( @"%@", fm_err );
-        return;
-    }
     
     // Load the File Metadata Dictionary from the local drive.
     localFileMetadata = [NSMutableDictionary dictionaryWithContentsOfURL:[self getLocalURL:DROPBOX_META_ARCHIVE] ];
@@ -261,8 +257,19 @@ const NSString *DB_REVISION_CODE = @"revision_code";
     [localFileMetadata writeToURL:[self getLocalURL:DROPBOX_META_ARCHIVE] atomically:YES];
 }
 
-- (void)deleteDropboxTempDir {
+- (void)createDropboxTempDir {
+    // Create temp directory if it doesn't exist
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *temp_dir = [self getLocalURL:@""];
+    NSError *fm_err;
+    if( ![fileManager createDirectoryAtURL:temp_dir withIntermediateDirectories:YES attributes:nil error:&fm_err ]) {
+        printf("Cannot create temp directory for dropbox!\n");
+        NSLog( @"%@", fm_err );
+        return;
+    }
+}
 
+- (void)deleteDropboxTempDir {
     // Delete temp directory
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *temp_dir = [self getLocalURL:@""];
@@ -289,7 +296,10 @@ const NSString *DB_REVISION_CODE = @"revision_code";
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *err;
-    
+
+    // Create temp directory if it doesn't exist
+    [self createDropboxTempDir];
+
     // Check if local file already exists.
     NSString *localpath = [self getLocalPath:filename ];
     NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:localpath error:&err];
