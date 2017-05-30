@@ -95,15 +95,11 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
             return
         }
         
-        let cryptoRandomStream = Salsa20RandomStream()!
+        let cryptoRandomStream = Salsa20RandomStream()
 
         var password = ""
         for _ in 1...length {
-<<<<<<< HEAD
-            let idx = Int(cryptoRandomStream.getInt() % UInt32(charSet.characters.count))
-=======
             let idx = Int((cryptoRandomStream?.getInt())! % UInt32(charSet.characters.count))
->>>>>>> upstream/autolayout
             password.append(charSet[charSet.characters.index(charSet.startIndex, offsetBy: idx)])
         }
     
@@ -184,13 +180,8 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
         
         lengthCell.detailTextLabel?.text = String(length)
         
-<<<<<<< HEAD
-        let appSettings = AppSettings.sharedInstance()!
-        appSettings.setPwGenLength(length)
-=======
         let appSettings = AppSettings.sharedInstance()
         appSettings?.setPwGenLength(length)
->>>>>>> upstream/autolayout
         
         generatePassword()
     }
@@ -212,13 +203,8 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
     func lengthUpdated(_ len: Int) {
         length = len
         
-<<<<<<< HEAD
-        let appSettings = AppSettings.sharedInstance()!
-        appSettings.setPwGenLength(length)
-=======
         let appSettings = AppSettings.sharedInstance()
         appSettings?.setPwGenLength(length)
->>>>>>> upstream/autolayout
         
         generatePassword()
     }

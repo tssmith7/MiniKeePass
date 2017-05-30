@@ -22,7 +22,6 @@
 
 @interface TextFieldCell()
 @property (nonatomic, strong) UIView *grayBar;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
 @implementation TextFieldCell
@@ -83,8 +82,8 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    if ([self.textFieldCellDelegate respondsToSelector:@selector(textFieldCellDidEndEditing:)]) {
-        [self.textFieldCellDelegate textFieldCellDidEndEditing:self];
+    if ([self.delegate respondsToSelector:@selector(textFieldCellDidEndEditing:)]) {
+        [self.delegate textFieldCellDidEndEditing:self];
     }
     
     if (self.style == TextFieldCellStylePassword) {
@@ -94,8 +93,8 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)field {
-    if ([self.textFieldCellDelegate respondsToSelector:@selector(textFieldCellWillReturn:)]) {
-        [self.textFieldCellDelegate textFieldCellWillReturn:self];
+    if ([self.delegate respondsToSelector:@selector(textFieldCellWillReturn:)]) {
+        [self.delegate textFieldCellWillReturn:self];
     }
     
     return NO;

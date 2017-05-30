@@ -30,8 +30,9 @@ typedef NS_ENUM(NSInteger, TextFieldCellStyle) {
 @interface TextFieldCell : UITableViewCell <UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, copy) NSString *title;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextField *textField;
-@property (nonatomic, unsafe_unretained) id<TextFieldCellDelegate> textFieldCellDelegate;
+@property (nonatomic, unsafe_unretained) id<TextFieldCellDelegate> delegate;
 
 @property (nonatomic, strong) UIButton *accessoryButton;
 @property (nonatomic, strong) UIButton *editAccessoryButton;

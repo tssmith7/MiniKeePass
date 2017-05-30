@@ -50,7 +50,7 @@
 		6851FAFD186DD11D00A53B0E /* UIActionSheetAutoDismiss.m in Sources */ = {isa = PBXBuildFile; fileRef = 6851FAFC186DD11D00A53B0E /* UIActionSheetAutoDismiss.m */; };
 		685D9D951603F8EE00D739D3 /* Kdb3Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 685D9D941603F8EE00D739D3 /* Kdb3Utils.m */; };
 		68767B651D6F23350039EFE0 /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68767B641D6F23350039EFE0 /* FilesViewController.swift */; };
-		68767B671D6F241F0039EFE0 /* Files.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68767B661D6F241F0039EFE0 /* Files.storyboard */; };
+		68767B671D6F241F0039EFE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68767B661D6F241F0039EFE0 /* Main.storyboard */; };
 		68767B691D70B0830039EFE0 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68767B681D70B0830039EFE0 /* Array+Extensions.swift */; };
 		688038971D6BB33A001424CA /* WebBrowser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 688038951D6BB33A001424CA /* WebBrowser.storyboard */; };
 		688038981D6BB33A001424CA /* WebBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688038961D6BB33A001424CA /* WebBrowserViewController.swift */; };
@@ -150,9 +150,7 @@
 		781C20F61EA738950089B916 /* DropboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 781C20F41EA738950089B916 /* DropboxManager.m */; };
 		782940E51EA5921800B5559C /* DatabaseOptions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 782940E41EA5921800B5559C /* DatabaseOptions.storyboard */; };
 		782940EB1EA5DBE300B5559C /* DBOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782940EA1EA5DBE300B5559C /* DBOptionsViewController.swift */; };
-		7832A5091EB001F1001E57F0 /* GroupView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7832A5081EB001F1001E57F0 /* GroupView.storyboard */; };
 		7832A50B1EB006EA001E57F0 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7832A50A1EB006EA001E57F0 /* GroupViewController.swift */; };
-		7832A50D1EB00761001E57F0 /* GroupSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7832A50C1EB00761001E57F0 /* GroupSearchController.swift */; };
 		78E3BC601ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */; };
 		78E3BC611ED8010100EBEBDA /* ObjectiveDropboxOfficial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC561ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78E3BC6A1ED804B300EBEBDA /* argon2iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78E3BC691ED8029800EBEBDA /* argon2iOS.framework */; };
@@ -296,7 +294,7 @@
 		685D9D931603F8EE00D739D3 /* Kdb3Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kdb3Utils.h; sourceTree = "<group>"; };
 		685D9D941603F8EE00D739D3 /* Kdb3Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Kdb3Utils.m; sourceTree = "<group>"; };
 		68767B641D6F23350039EFE0 /* FilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
-		68767B661D6F241F0039EFE0 /* Files.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Files.storyboard; sourceTree = "<group>"; };
+		68767B661D6F241F0039EFE0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = "Files View/Main.storyboard"; sourceTree = "<group>"; };
 		68767B681D70B0830039EFE0 /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		687AAA981889F8B400AB8AC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text; name = en; path = en.lproj/AppStore.txt; sourceTree = "<group>"; };
 		687AAAA11889FB4000AB8AC5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text; name = ru; path = ru.lproj/AppStore.txt; sourceTree = "<group>"; };
@@ -473,9 +471,7 @@
 		781C20F41EA738950089B916 /* DropboxManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxManager.m; sourceTree = "<group>"; };
 		782940E41EA5921800B5559C /* DatabaseOptions.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DatabaseOptions.storyboard; path = "Database Options View/DatabaseOptions.storyboard"; sourceTree = "<group>"; };
 		782940EA1EA5DBE300B5559C /* DBOptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBOptionsViewController.swift; path = "Database Options View/DBOptionsViewController.swift"; sourceTree = "<group>"; };
-		7832A5081EB001F1001E57F0 /* GroupView.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GroupView.storyboard; sourceTree = "<group>"; };
 		7832A50A1EB006EA001E57F0 /* GroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
-		7832A50C1EB00761001E57F0 /* GroupSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupSearchController.swift; sourceTree = "<group>"; };
 		78E3BC501ED7FCFA00EBEBDA /* ObjectiveDropboxOfficial.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveDropboxOfficial.xcodeproj; path = "MBProgressHUD/../dropbox-sdk-obj-c/Source/ObjectiveDropboxOfficial/ObjectiveDropboxOfficial.xcodeproj"; sourceTree = "<group>"; };
 		78E3BC641ED8029700EBEBDA /* argon2iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = argon2iOS.xcodeproj; sourceTree = "<group>"; };
 		BDB0FF5D194C7C6F00C44DEF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text; name = nl; path = nl.lproj/AppStore.txt; sourceTree = "<group>"; };
@@ -539,6 +535,13 @@
 				78E3BC401ED7FC3400EBEBDA /* MBProgressHUD.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5271A98E1EDA16D200B9AF2C /* Entry View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Entry View";
 			sourceTree = "<group>";
 		};
 		52E43F4615B59C880029F979 /* ru */ = {
@@ -624,7 +627,6 @@
 		68767B631D6F23350039EFE0 /* Files View */ = {
 			isa = PBXGroup;
 			children = (
-				68767B661D6F241F0039EFE0 /* Files.storyboard */,
 				68767B641D6F23350039EFE0 /* FilesViewController.swift */,
 				68767B681D70B0830039EFE0 /* Array+Extensions.swift */,
 			);
@@ -825,8 +827,10 @@
 		689DFFDF13A4273F005EBD36 /* MiniKeePass */ = {
 			isa = PBXGroup;
 			children = (
+				68767B661D6F241F0039EFE0 /* Main.storyboard */,
 				6895D2F01D68FE00003D8C44 /* Custom Field View */,
 				782940E01EA5915100B5559C /* Database Options View */,
+				5271A98E1EDA16D200B9AF2C /* Entry View */,
 				68767B631D6F23350039EFE0 /* Files View */,
 				68A7F3931D76708000467354 /* Group View */,
 				680C9D751D69E2A70040FB43 /* Help View */,
@@ -986,9 +990,7 @@
 		68A7F3931D76708000467354 /* Group View */ = {
 			isa = PBXGroup;
 			children = (
-				7832A5081EB001F1001E57F0 /* GroupView.storyboard */,
 				7832A50A1EB006EA001E57F0 /* GroupViewController.swift */,
-				7832A50C1EB00761001E57F0 /* GroupSearchController.swift */,
 			);
 			path = "Group View";
 			sourceTree = "<group>";
@@ -1183,7 +1185,7 @@
 				52A177BC13EB698E00CEEFCE /* createdb.html in Resources */,
 				68CE37F51404A86600E4A5E1 /* safariemail.html in Resources */,
 				68DDC3731405160300FC8BD8 /* keyfiles.html in Resources */,
-				68767B671D6F241F0039EFE0 /* Files.storyboard in Resources */,
+				68767B671D6F241F0039EFE0 /* Main.storyboard in Resources */,
 				68EA62DB1CC972F300B33E42 /* LaunchScreen.storyboard in Resources */,
 				689D033113A42B63005EBD36 /* style.css in Resources */,
 				68E08310146F24E3001C4EDF /* Localizable.strings in Resources */,
@@ -1207,7 +1209,6 @@
 				4E8C169316B3E871004195A1 /* fr-createdb.html in Resources */,
 				689EA6941D67F94600CF445E /* Settings.storyboard in Resources */,
 				4E8C169416B3E871004195A1 /* fr-dropbox.html in Resources */,
-				7832A5091EB001F1001E57F0 /* GroupView.storyboard in Resources */,
 				4E8C169516B3E871004195A1 /* fr-itunes.html in Resources */,
 				5271A98D1ED7CA3E00B9AF2C /* TextFieldCell.xib in Resources */,
 				680C9D7A1D69E36C0040FB43 /* Help.storyboard in Resources */,
@@ -1282,7 +1283,6 @@
 				689D03E813A42B63005EBD36 /* UUID.m in Sources */,
 				689EA6951D67F94600CF445E /* SettingsViewController.swift in Sources */,
 				689EA67B1D67F8B500CF445E /* ImageSelectorViewController.swift in Sources */,
-				7832A50D1EB00761001E57F0 /* GroupSearchController.swift in Sources */,
 				781C20A21EA71ED20089B916 /* HmacInputStream.m in Sources */,
 				781C20991EA71EAE0089B916 /* ChaCha20InputStream.m in Sources */,
 				689D03E913A42B63005EBD36 /* DDXMLElementAdditions.m in Sources */,

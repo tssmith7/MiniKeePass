@@ -155,12 +155,13 @@ class SettingsViewController: UITableViewController, PinViewControllerDelegate {
         setCellEnabled(closeDatabaseTimeoutCell, enabled: closeEnabled)
         setCellEnabled(clearClipboardTimeoutCell, enabled: clearClipboardEnabled)
 
-        if( !DropboxManager.sharedInstance().isClientAuthorized() ) {
+/*        if( !DropboxManager.sharedInstance().isClientAuthorized() ) {
             dropboxEnabledSwitch.isEnabled = false
             dropboxEnabledSwitch.isOn = false
         } else {
             dropboxEnabledSwitch.isEnabled = true
         }
+ */
     }
     
     fileprivate func setCellEnabled(_ cell: UITableViewCell, enabled: Bool) {

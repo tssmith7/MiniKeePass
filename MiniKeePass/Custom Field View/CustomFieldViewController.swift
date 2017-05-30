@@ -53,23 +53,16 @@ class CustomFieldViewController: UITableViewController {
     // MARK: - Actions
 
     @IBAction func donePressedAction(_ sender: UIBarButtonItem?) {
-        let name = nameTextField.text;
-        if (name == nil || name!.isEmpty) {
+        guard let name = nameTextField.text, !(name.isEmpty) else {
             self.presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Name cannot be empty", comment: ""))
             return
         }
 
-<<<<<<< HEAD
-        stringField!.key = nameTextField.text
-        stringField!.value = valueTextField.text
-        stringField!.protected = inMemoryProtectionSwitch.isOn
-=======
         if let stringField = stringField {
             stringField.key = nameTextField.text
             stringField.value = valueTextField.text
             stringField.protected = inMemoryProtectionSwitch.isOn
         }
->>>>>>> upstream/autolayout
 
         donePressed?(self)
     }

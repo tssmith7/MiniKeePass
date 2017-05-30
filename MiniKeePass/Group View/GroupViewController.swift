@@ -78,8 +78,6 @@ class GroupViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.allowsMultipleSelectionDuringEditing = true
-
         // Add the edit button
         navigationItem.rightBarButtonItems = [self.editButtonItem]
 
@@ -100,18 +98,102 @@ class GroupViewController: UITableViewController {
         toolbarItems = standardToolbarItems
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        // Ensure cell reflects name change and proper cell is highlighted
+        var updatedIndexPath: IndexPath?
+
+        // Only matters if a cell was selected
+        if let indexPath = tableView.indexPathForSelectedRow {
+            let cell = tableView.cellForRow(at: indexPath)
+            let section = indexPath.section
+            
+            updateViewModel()
+            
+            switch section {
+            case Section.groups.rawValue:
+                // Check if an update is needed
+                if groups[indexPath.row].name == cell?.textLabel?.text {
+                    break
+                }
+                
+                // Find most recently updated group
+                var index = -1
+                var mostRecent: KdbGroup?
+                for i in 0 ..< groups.count {
+                    let group = groups[i]
+                    if mostRecent == nil || group.lastModificationTime > mostRecent!.lastModificationTime {
+                        mostRecent = group
+                        index = i
+                    }
+                }
+
+                updatedIndexPath = IndexPath(row: index, section: section)
+            case Section.entries.rawValue:
+                // Check if an update is needed
+                if entries[indexPath.row].title() == cell?.textLabel?.text {
+                    break
+                }
+
+                // Find most recently updated entry
+                var index = -1
+                var mostRecent: KdbEntry?
+                for i in 0 ..< entries.count {
+                    let entry = entries[i]
+                    if mostRecent == nil || entry.lastModificationTime > mostRecent!.lastModificationTime {
+                        mostRecent = entry
+                        index = i
+                    }
+                }
+                
+                updatedIndexPath = IndexPath(row: index, section: section)
+            default: break
+            }
+        }
+        
+        self.setEditing(false, animated: false)
+        
+        if updatedIndexPath != nil {
+            let indexSet = IndexSet(integer: updatedIndexPath!.section)
+            tableView.reloadSections(indexSet, with: .none)
+            
+            tableView.selectRow(at: updatedIndexPath, animated: false, scrollPosition: .none)
+        }
+        
+        super.viewWillAppear(animated)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         documentInteractionController?.dismissMenu(animated: false)
     }
 
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return !isEditing
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let indexPath = self.tableView.indexPathForSelectedRow else {
+            return
+        }
+        
+        if let destination = segue.destination as? GroupViewController {
+            let group = groups[indexPath.row]
+            destination.parentGroup = group
+            destination.title = group.name
+        }
+        else if let destination = segue.destination as? EntryViewController {
+            let entry = entries[indexPath.row]
+            destination.entry = entry
+            destination.title = entry.title()
+        }
+    }
+    
     func updateViewModel() {
         groups = parentGroup.groups as! [KdbGroup]
         entries = parentGroup.entries as! [KdbEntry]
 
-        let appSettings = AppSettings.sharedInstance()
-        if (appSettings?.sortAlphabetically())! {
+        if let appSettings = AppSettings.sharedInstance(), appSettings.sortAlphabetically() {
             groups.sort {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
@@ -136,10 +218,10 @@ class GroupViewController: UITableViewController {
 
     private func updateEditingToolbar() {
         if (tableView.isEditing) {
-            let numSelectedRows = tableView.indexPathsForSelectedRows?.count
-            
-            editingToolbarItems[EditButton.Delete.rawValue].isEnabled = numSelectedRows! > 0
-            editingToolbarItems[EditButton.Move.rawValue].isEnabled = numSelectedRows! > 0
+            let numSelectedRows = tableView.indexPathsForSelectedRows?.count ?? 0
+
+            editingToolbarItems[EditButton.Delete.rawValue].isEnabled = numSelectedRows > 0
+            editingToolbarItems[EditButton.Move.rawValue].isEnabled = numSelectedRows > 0
             editingToolbarItems[EditButton.Rename.rawValue].isEnabled = numSelectedRows == 1
         }
     }
@@ -192,29 +274,33 @@ class GroupViewController: UITableViewController {
         case .groups:
             let group = groups[indexPath.row]
 
-            cell = tableView.dequeueReusableCell(withIdentifier: "GroupCell") ?? UITableViewCell(style: .default, reuseIdentifier: "GroupCell")
+            cell = tableView.dequeueReusableCell(withIdentifier: "GroupCell")!
             cell.textLabel?.text = group.name
             cell.imageView?.image = imageFactory?.image(for: group)
+
         case .entries:
             let entry = entries[indexPath.row]
 
-            cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell") ?? UITableViewCell(style: .default, reuseIdentifier: "EntryCell")
+            cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell")!
             cell.textLabel?.text = entry.title()
             cell.imageView?.image = imageFactory?.image(for: entry)
 
             // Detail text is a combination of username and url
-            let username = entry.username()
-            let url = entry.url()
-            
-            if (username != nil && !(username!.isEmpty) && url != nil && !(url!.isEmpty)) {
-                cell.detailTextLabel?.text = "\(username ?? "username") @ \(url ?? "")"
-            } else if (username != nil && !(username!.isEmpty)) {
-                cell.detailTextLabel?.text = username
-            } else if (url != nil && !(url!.isEmpty)) {
-                cell.detailTextLabel?.text = url
-            } else {
-                cell.detailTextLabel?.text = ""
+            var accountDescription = ""
+            var usernameSet = false
+            if let username = entry.username(), !(username.isEmpty) {
+                usernameSet = true
+                accountDescription += username
             }
+            
+            if let url = entry.url(), !(url.isEmpty) {
+                if usernameSet {
+                    accountDescription += " @ "
+                }
+                accountDescription += url
+            }
+            
+            cell.detailTextLabel?.text = accountDescription
         }
 
         return cell
@@ -222,24 +308,7 @@ class GroupViewController: UITableViewController {
 
     // MARK: - UITableView delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (!isEditing) {
-            switch Section.AllValues[indexPath.section] {
-            case .groups:
-                let group = groups[indexPath.row]
-                let groupViewController = GroupViewController(style: .plain)
-                groupViewController.parentGroup = group
-                groupViewController.title = group.name
-
-                navigationController?.pushViewController(groupViewController, animated: true)
-
-            case .entries:
-                let entry = entries[indexPath.row]
-                let entryViewController = EntryViewController(style: .grouped)
-                entryViewController.entry = entry;
-                entryViewController.title = entry.title()
-                navigationController?.pushViewController(entryViewController, animated: true)
-            }
-        } else {
+        if (isEditing) {
             updateEditingToolbar()
         }
     }
@@ -319,8 +388,10 @@ class GroupViewController: UITableViewController {
 
     func actionPressed(_ sender: UIBarButtonItem) {
         // Get the URL of the database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()
-        let url = URL(fileURLWithPath: (appDelegate?.databaseDocument.filename)!)
+        guard let appDelegate = MiniKeePassAppDelegate.getDelegate() else {
+            return
+        }
+        let url = URL(fileURLWithPath: appDelegate.databaseDocument.filename)
 
         // Present the options to handle the database
         documentInteractionController = UIDocumentInteractionController(url: url)
@@ -361,9 +432,14 @@ class GroupViewController: UITableViewController {
         let databaseDocument = appDelegate?.databaseDocument
 
         // Create and add a group
-        let group = databaseDocument?.kdbTree.createGroup(parentGroup)
-        group?.name = NSLocalizedString("New Group", comment: "")
-        group?.image = parentGroup.image
+        guard let group = databaseDocument?.kdbTree.createGroup(parentGroup) else {
+            // Could not greate new group
+            // TODO: Display an error?
+            return
+        }
+        
+        group.name = NSLocalizedString("New Group", comment: "")
+        group.image = parentGroup.image
 
         // Display the Rename Item view
         let storyboard = UIStoryboard(name: "RenameItem", bundle: nil)
@@ -377,10 +453,10 @@ class GroupViewController: UITableViewController {
             databaseDocument?.save()
 
             // Add the group to the model
-            let index = self.groups.insertionIndexOf(group!) {
+            let index = self.groups.insertionIndexOf(group) {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
-            self.groups.insert(group!, at: index)
+            self.groups.insert(group, at: index)
 
             // Update the table
             if (self.groups.count == 1) {
@@ -401,19 +477,24 @@ class GroupViewController: UITableViewController {
         let databaseDocument = appDelegate?.databaseDocument
 
         // Create and add a entry
-        let entry = databaseDocument?.kdbTree.createEntry(parentGroup)
-        entry?.setTitle(NSLocalizedString("New Entry", comment: ""))
-        entry?.image = parentGroup.image
+        guard let entry = databaseDocument?.kdbTree.createEntry(parentGroup) else {
+            // Could not create new entry
+            // TODO: Display error?
+            return
+        }
+        
+        entry.setTitle(NSLocalizedString("New Entry", comment: ""))
+        entry.image = parentGroup.image
         parentGroup.addEntry(entry)
 
         // Save the database
         databaseDocument?.save()
 
         // Add the entry to the model
-        let index = self.entries.insertionIndexOf(entry!) {
+        let index = self.entries.insertionIndexOf(entry) {
             $0.title().localizedCaseInsensitiveCompare($1.title()) == .orderedAscending
         }
-        self.entries.insert(entry!, at: index)
+        self.entries.insert(entry, at: index)
 
         // Update the table
         if (self.entries.count == 1) {
@@ -426,17 +507,22 @@ class GroupViewController: UITableViewController {
         // Show the Entry view controller
         let viewController = EntryViewController(style: .grouped)
         viewController.entry = entry
-        viewController.title = entry?.title()
+        viewController.title = entry.title()
         viewController.isNewEntry = true
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     func deletePressed(sender: UIBarButtonItem) {
-        deleteItems(indexPaths: tableView.indexPathsForSelectedRows!)
+        if let indexPaths = tableView.indexPathsForSelectedRows {
+            deleteItems(indexPaths: indexPaths)
+        }
     }
 
-    func movePressed(_ sender: UIBarButtonItem) {
-        let indexPaths = tableView.indexPathsForSelectedRows!
+    func movePressed(sender: UIBarButtonItem) {
+        guard let indexPaths = tableView.indexPathsForSelectedRows else {
+            // Nothing selected. Shouldn't have been possible to press "Move"
+            return;
+        }
 
         // Create a list of all the items to move
         var itemsToMove: [AnyObject] = []
@@ -458,10 +544,10 @@ class GroupViewController: UITableViewController {
         viewController.groupSelected = { (moveItemsViewController: MoveItemsViewController, selectedGroup: KdbGroup) -> Void in
             // Delete the items from the model
             for obj in itemsToMove {
-                if (obj is KdbGroup) {
-                    self.groups.removeObject(obj as! KdbGroup)
-                } else if (obj is KdbEntry) {
-                    self.entries.removeObject(obj as! KdbEntry)
+                if let group = obj as? KdbGroup {
+                    self.groups.removeObject(group)
+                } else if let entry = obj as? KdbEntry {
+                    self.entries.removeObject(entry)
                 }
             }
 
@@ -482,23 +568,17 @@ class GroupViewController: UITableViewController {
         present(navigationController, animated: true, completion: nil)
     }
 
-    func renamePressed(_ sender: UIBarButtonItem) {
-        let indexPath = tableView.indexPathForSelectedRow!
+    func renamePressed(sender: UIBarButtonItem) {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            // Nothing selected. This shoudn't have been called
+            return
+        }
 
         // Load the RenameItem storyboard
         let storyboard = UIStoryboard(name: "RenameItem", bundle: nil)
         let navigationController = storyboard.instantiateInitialViewController() as! UINavigationController
 
         let viewController = navigationController.topViewController as! RenameItemViewController
-        viewController.donePressed = { (renameItemViewController: RenameItemViewController) -> Void in
-            // Update the table
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
-
-            self.setEditing(false, animated: true)
-        }
-        viewController.cancelPressed = { (renameItemViewController: RenameItemViewController) -> Void in
-            self.setEditing(false, animated: true)
-        }
 
         // Set the group/entry to rename
         switch Section.AllValues[indexPath.section] {
