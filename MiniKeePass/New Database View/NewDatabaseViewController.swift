@@ -46,51 +46,54 @@ class NewDatabaseViewController: UITableViewController {
 
     @IBAction func donePressedAction(_ sender: UIBarButtonItem?) {
         // Check to make sure the name was supplied
-        let name = nameTextField.text
-        if (name == nil || name!.isEmpty) {
+        guard let name = nameTextField.text, !(name.isEmpty) else {
             presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Database name is required", comment: ""))
             return
         }
 
         // Check the passwords
-        let password1 = passwordTextField.text
-        let password2 = confirmPasswordTextField.text
+        guard let password1 = passwordTextField.text, !(password1.isEmpty),
+            let password2 = confirmPasswordTextField.text, !(password2.isEmpty) else {
+                presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Password is required", comment: ""))
+                return
+        }
+
         if (password1 != password2) {
             presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Passwords do not match", comment: ""))
             return
         }
-        if (password1 == nil || password1!.isEmpty) {
-            presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Password is required", comment: ""))
-            return
-        }
 
-        // Create a URL to the file
         var version: Int
-        var url = MiniKeePassAppDelegate.documentsDirectoryUrl()!
-        url = url.appendingPathComponent(name!)
+        var extention: String
+
         if (versionSegmentedControl.selectedSegmentIndex == 0) {
             version = 1
-            url = url.appendingPathExtension("kdb")
+            extention = "kdb"
         } else {
             version = 2
-            url = url.appendingPathExtension("kdbx")
+            extention = "kdbx"
+        }
+        
+        // Create a URL to the file
+        var url = MiniKeePassAppDelegate.documentsDirectoryUrl()
+        url = url?.appendingPathComponent("\(name).\(extention)")
+        
+        if url == nil {
+            presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Could not create file path", comment: ""))
+            return
         }
 
         // Check if the file already exists
-        var isReachable: Bool = true
         do {
-            isReachable = try url.checkPromisedItemIsReachable()
+            if try url!.checkResourceIsReachable() {
+                presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("A file already exists with this name", comment: ""))
+                return
+            }
         } catch {
-            isReachable = false;
-        }
-        
-        if( isReachable ) {
-            presentAlertWithTitle(NSLocalizedString("Error", comment: ""), message: NSLocalizedString("A file already exists with this name", comment: ""))
-            return
         }
 
         // Notify the listener
-        donePressed?(self, url, password1!, version)
+        donePressed?(self, url!, password1, version)
     }
     
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {

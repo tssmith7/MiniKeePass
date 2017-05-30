@@ -51,9 +51,9 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let appSettings = AppSettings.sharedInstance()!
-        length = appSettings.pwGenLength()
-        charSets = appSettings.pwGenCharSets()
+        let appSettings = AppSettings.sharedInstance()
+        length = (appSettings?.pwGenLength())!
+        charSets = (appSettings?.pwGenCharSets())!
         
         lengthCell.detailTextLabel?.text = String(length)
         lengthPickerView.selectRow(length - 1, inComponent: 0, animated: false)
@@ -99,7 +99,11 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
 
         var password = ""
         for _ in 1...length {
+<<<<<<< HEAD
             let idx = Int(cryptoRandomStream.getInt() % UInt32(charSet.characters.count))
+=======
+            let idx = Int((cryptoRandomStream?.getInt())! % UInt32(charSet.characters.count))
+>>>>>>> upstream/autolayout
             password.append(charSet[charSet.characters.index(charSet.startIndex, offsetBy: idx)])
         }
     
@@ -180,8 +184,13 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
         
         lengthCell.detailTextLabel?.text = String(length)
         
+<<<<<<< HEAD
         let appSettings = AppSettings.sharedInstance()!
         appSettings.setPwGenLength(length)
+=======
+        let appSettings = AppSettings.sharedInstance()
+        appSettings?.setPwGenLength(length)
+>>>>>>> upstream/autolayout
         
         generatePassword()
     }
@@ -203,8 +212,13 @@ class PasswordGeneratorViewController: UITableViewController, UIPickerViewDataSo
     func lengthUpdated(_ len: Int) {
         length = len
         
+<<<<<<< HEAD
         let appSettings = AppSettings.sharedInstance()!
         appSettings.setPwGenLength(length)
+=======
+        let appSettings = AppSettings.sharedInstance()
+        appSettings?.setPwGenLength(length)
+>>>>>>> upstream/autolayout
         
         generatePassword()
     }

@@ -30,9 +30,13 @@ class CustomFieldViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        nameTextField.text = stringField!.key
-        valueTextField.text = stringField!.value
-        inMemoryProtectionSwitch.isOn = stringField!.protected
+        guard let stringField = stringField else {
+            return
+        }
+        
+        nameTextField.text = stringField.key
+        valueTextField.text = stringField.value
+        inMemoryProtectionSwitch.isOn = stringField.protected
     }
     
     // MARK: - UITextFieldDelegate
@@ -55,9 +59,17 @@ class CustomFieldViewController: UITableViewController {
             return
         }
 
+<<<<<<< HEAD
         stringField!.key = nameTextField.text
         stringField!.value = valueTextField.text
         stringField!.protected = inMemoryProtectionSwitch.isOn
+=======
+        if let stringField = stringField {
+            stringField.key = nameTextField.text
+            stringField.value = valueTextField.text
+            stringField.protected = inMemoryProtectionSwitch.isOn
+        }
+>>>>>>> upstream/autolayout
 
         donePressed?(self)
     }

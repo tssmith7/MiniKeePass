@@ -29,8 +29,8 @@ class RenameItemViewController: UITableViewController {
     
     fileprivate var selectedImageIndex: Int = -1 {
         didSet {
-            let imageFactory = ImageFactory.sharedInstance()!
-            imageView.image = imageFactory.image(for: selectedImageIndex)
+            let imageFactory = ImageFactory.sharedInstance()
+            imageView.image = imageFactory?.image(for: selectedImageIndex)
         }
     }
     
@@ -83,9 +83,9 @@ class RenameItemViewController: UITableViewController {
         }
 
         // Save the database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let databaseDocument = appDelegate.databaseDocument!
-        databaseDocument.save()
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let databaseDocument = appDelegate?.databaseDocument
+        databaseDocument?.save()
 
         donePressed?(self)
 

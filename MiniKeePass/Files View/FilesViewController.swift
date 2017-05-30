@@ -36,12 +36,16 @@ class FilesViewController: UITableViewController {
     var dropboxStatus: String!
     
     override func viewWillAppear(_ animated: Bool) {
-        let databaseManager = DatabaseManager.sharedInstance()!
-        databaseFiles = databaseManager.getDatabases() as! [String]
-        keyFiles = databaseManager.getKeyFiles() as! [String]
+        super.viewWillAppear(animated)
+
+        if let databaseManager = DatabaseManager.sharedInstance() {
+            databaseFiles = databaseManager.getDatabases() as! [String]
+            keyFiles = databaseManager.getKeyFiles() as! [String]
+        }
         if( AppSettings.sharedInstance().dropboxEnabled() ) {
             self.loadDropboxFiles()
         }
+
         tableView.reloadData()
         
         super.viewWillAppear(animated)
@@ -148,7 +152,6 @@ class FilesViewController: UITableViewController {
         }
     }
         
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell
         let filename: String
@@ -169,15 +172,15 @@ class FilesViewController: UITableViewController {
         cell.textLabel!.text = filename
         
         // Get the file's modification date
-        let databaseManager = DatabaseManager.sharedInstance()!
-        var date: Date!
+        let databaseManager = DatabaseManager.sharedInstance()
+        var date: Date?
         if( indexPath.section == Section.databases.rawValue ) {
             // Get the file's last modification time
-            let url = databaseManager.getFileUrl(filename)
-            date = databaseManager.getFileLastModificationDate(url)
+            let url = databaseManager?.getFileUrl(filename)
+            date = databaseManager?.getFileLastModificationDate(url)
         } else {
-            let dropboxManager = DropboxManager.sharedInstance()!
-            date = dropboxManager.getDropboxFileModifiedDate(filename)
+            let dropboxManager = DropboxManager.sharedInstance()
+            date = dropboxManager?.getDropboxFileModifiedDate(filename)
         }
         
         if( date != nil ) {
@@ -186,7 +189,7 @@ class FilesViewController: UITableViewController {
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .short
             dateFormatter.timeStyle = .short
-            cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + dateFormatter.string(from: date)
+            cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + dateFormatter.string(from: date!)
         } else {
             cell.detailTextLabel!.text = NSLocalizedString("Last Modified", comment: "") + ": " + "(-)"
         }
@@ -200,8 +203,8 @@ class FilesViewController: UITableViewController {
         switch Section.AllValues[indexPath.section] {
         case .databases:
             // Load the database
-            let databaseManager = DatabaseManager.sharedInstance()!
-            databaseManager.openDatabaseDocument(databaseFiles[indexPath.row], animated: true, dropbox: false)
+            let databaseManager = DatabaseManager.sharedInstance()
+            databaseManager?.openDatabaseDocument(databaseFiles[indexPath.row], animated: true, dropbox: false)
             break
         case .dropboxFiles:
             // Download the dropbox database and load
@@ -214,7 +217,7 @@ class FilesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
+        let deleteAction = UITableViewRowAction(style: .destructive, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             self.deleteRowAtIndexPath(indexPath)
         }
         
@@ -238,8 +241,9 @@ class FilesViewController: UITableViewController {
         
         let viewController = navigationController.topViewController as! RenameDatabaseViewController
         viewController.donePressed = { (renameDatabaseViewController: RenameDatabaseViewController, originalUrl: URL, newUrl: URL) in
-            let databaseManager = DatabaseManager.sharedInstance()!
-            databaseManager.renameDatabase(originalUrl, newUrl: newUrl)
+
+            let databaseManager = DatabaseManager.sharedInstance()
+            databaseManager?.renameDatabase(originalUrl, newUrl: newUrl)
             
             // Update the filename in the files list
             self.databaseFiles[indexPath.row] = newUrl.lastPathComponent
@@ -248,8 +252,8 @@ class FilesViewController: UITableViewController {
             self.dismiss(animated: true, completion: nil)
         }
         
-        let databaseManager = DatabaseManager.sharedInstance()!
-        viewController.originalUrl = databaseManager.getFileUrl(databaseFiles[indexPath.row])
+        let databaseManager = DatabaseManager.sharedInstance()
+        viewController.originalUrl = databaseManager?.getFileUrl(databaseFiles[indexPath.row])
         
         present(navigationController, animated: true, completion: nil)
     }
@@ -267,9 +271,9 @@ class FilesViewController: UITableViewController {
         }
         
         // Delete the file
-        let databaseManager = DatabaseManager.sharedInstance()!
-        databaseManager.deleteFile(filename)
-        
+        let databaseManager = DatabaseManager.sharedInstance()
+        databaseManager?.deleteFile(filename)
+       
         // Update the table
         tableView.deleteRows(at: [indexPath], with: .fade)
     }
@@ -297,8 +301,8 @@ class FilesViewController: UITableViewController {
         let viewController = navigationController.topViewController as! NewDatabaseViewController
         viewController.donePressed = { (newDatabaseViewController: NewDatabaseViewController, url: URL, password: String, version: Int) -> Void in
             // Create the new database
-            let databaseManager = DatabaseManager.sharedInstance()!
-            databaseManager.newDatabase(url, password: password, version: version)
+            let databaseManager = DatabaseManager.sharedInstance()
+            databaseManager?.newDatabase(url, password: password, version: version)
             
             // Add the file to the list of files
             let filename = url.lastPathComponent
@@ -326,7 +330,7 @@ class FilesViewController: UITableViewController {
     func loadDropboxFilesCallback(_ error: Error? ) -> Void {
         if( error != nil ) {
             print(error!)
-            dropboxStatus = error!.localizedDescription
+            dropboxStatus = error?.localizedDescription
         } else {
             dropboxFiles = DropboxManager.sharedInstance().getDropboxFileList() as! [String]
             if( dropboxFiles.count == 0 ) {
@@ -358,7 +362,7 @@ class FilesViewController: UITableViewController {
         DropboxManager.sharedInstance().downloadDropboxFile(path, requestCallback:{ [unowned self] (error: Error?) -> Void in
             if( error != nil ) {
                 print(error!)
-                self.dropboxStatus = error!.localizedDescription
+                self.dropboxStatus = error?.localizedDescription
                 self.tableView.reloadData()
             } else {
                 // Load the database

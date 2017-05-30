@@ -41,8 +41,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-class GroupViewController: UITableViewController, UISearchResultsUpdating {
-    fileprivate enum Section : Int {
+class GroupViewController: UITableViewController {
+    private enum Section : Int {
         case groups = 0
         case entries = 1
 
@@ -50,24 +50,24 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
     }
 
     enum StandardButton : Int {
-        case settings = 0
-        case action = 2
-        case add = 4
+        case Settings = 0
+        case Action = 2
+        case Add = 4
     }
 
     enum EditButton : Int {
-        case delete = 0
-        case move = 2
-        case rename = 4
+        case Delete = 0
+        case Move = 2
+        case Rename = 4
     }
 
-    fileprivate var standardToolbarItems: [UIBarButtonItem]!
-    fileprivate var editingToolbarItems: [UIBarButtonItem]!
+    private var standardToolbarItems: [UIBarButtonItem]!
+    private var editingToolbarItems: [UIBarButtonItem]!
 
-    fileprivate var documentInteractionController: UIDocumentInteractionController?
+    private var documentInteractionController: UIDocumentInteractionController?
 
-    fileprivate var groups: [KdbGroup]!
-    fileprivate var entries: [KdbEntry]!
+    private var groups: [KdbGroup]!
+    private var entries: [KdbEntry]!
 
     var parentGroup: KdbGroup! {
         didSet {
@@ -80,7 +80,6 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
 
         tableView.allowsMultipleSelectionDuringEditing = true
 
-/*
         // Add the edit button
         navigationItem.rightBarButtonItems = [self.editButtonItem]
 
@@ -99,9 +98,6 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         editingToolbarItems = [deleteButton, spacer, moveButton, spacer, renameButton]
 
         toolbarItems = standardToolbarItems
-*/
-        // Setup the search controller
-        
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -114,8 +110,8 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         groups = parentGroup.groups as! [KdbGroup]
         entries = parentGroup.entries as! [KdbEntry]
 
-        let appSettings = AppSettings.sharedInstance()!
-        if (appSettings.sortAlphabetically()) {
+        let appSettings = AppSettings.sharedInstance()
+        if (appSettings?.sortAlphabetically())! {
             groups.sort {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
@@ -138,13 +134,13 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         // FIXME Enable/Disable the search bar
     }
 
-    fileprivate func updateEditingToolbar() {
+    private func updateEditingToolbar() {
         if (tableView.isEditing) {
             let numSelectedRows = tableView.indexPathsForSelectedRows?.count
-
-            editingToolbarItems[EditButton.delete.rawValue].isEnabled = numSelectedRows > 0
-            editingToolbarItems[EditButton.move.rawValue].isEnabled = numSelectedRows > 0
-            editingToolbarItems[EditButton.rename.rawValue].isEnabled = numSelectedRows == 1
+            
+            editingToolbarItems[EditButton.Delete.rawValue].isEnabled = numSelectedRows! > 0
+            editingToolbarItems[EditButton.Move.rawValue].isEnabled = numSelectedRows! > 0
+            editingToolbarItems[EditButton.Rename.rawValue].isEnabled = numSelectedRows == 1
         }
     }
 
@@ -198,22 +194,23 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
 
             cell = tableView.dequeueReusableCell(withIdentifier: "GroupCell") ?? UITableViewCell(style: .default, reuseIdentifier: "GroupCell")
             cell.textLabel?.text = group.name
-            cell.imageView?.image = imageFactory!.image(for: group)
+            cell.imageView?.image = imageFactory?.image(for: group)
         case .entries:
             let entry = entries[indexPath.row]
 
             cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell") ?? UITableViewCell(style: .default, reuseIdentifier: "EntryCell")
             cell.textLabel?.text = entry.title()
-            cell.imageView?.image = imageFactory!.image(for: entry)
+            cell.imageView?.image = imageFactory?.image(for: entry)
 
             // Detail text is a combination of username and url
-            let username: String? = nil;
-            let url: String? = nil;
-            if let username = entry.username(), let url = entry.url() {
-                cell.detailTextLabel?.text = "\(username) @ \(url)"
-            } else if (username != nil) {
+            let username = entry.username()
+            let url = entry.url()
+            
+            if (username != nil && !(username!.isEmpty) && url != nil && !(url!.isEmpty)) {
+                cell.detailTextLabel?.text = "\(username ?? "username") @ \(url ?? "")"
+            } else if (username != nil && !(username!.isEmpty)) {
                 cell.detailTextLabel?.text = username
-            } else if (url != nil) {
+            } else if (url != nil && !(url!.isEmpty)) {
                 cell.detailTextLabel?.text = url
             } else {
                 cell.detailTextLabel?.text = ""
@@ -224,19 +221,12 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
     }
 
     // MARK: - UITableView delegate
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (!isEditing) {
             switch Section.AllValues[indexPath.section] {
             case .groups:
                 let group = groups[indexPath.row]
-                let storyboard = UIStoryboard(name: "GroupView", bundle: nil)
-/*
-                let navController = storyboard.instantiateViewController(withIdentifier: "GroupViewController") as! UINavigationController
-                
-                let groupViewController = navigationController.topViewController as! GroupViewController
- */
-                let groupViewController = storyboard.instantiateViewController(withIdentifier: "GroupViewController") as! GroupViewController
+                let groupViewController = GroupViewController(style: .plain)
                 groupViewController.parentGroup = group
                 groupViewController.title = group.name
 
@@ -261,8 +251,8 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
     }
 
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
-            self.deleteItems([indexPath])
+        let deleteAction = UITableViewRowAction(style: .destructive, title: NSLocalizedString("Delete", comment: "")) { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
+            self.deleteItems(indexPaths: [indexPath])
         }
 
         return [deleteAction]
@@ -273,10 +263,10 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
             return
         }
 
-        deleteItems([indexPath])
+        deleteItems(indexPaths: [indexPath])
     }
 
-    func deleteItems(_ indexPaths: [IndexPath]) -> Void {
+    func deleteItems(indexPaths: [IndexPath]) -> Void {
         // Create a list of everything to delete
         var groupsToDelete: [KdbGroup] = []
         var entriesToDelete: [KdbEntry] = []
@@ -303,11 +293,11 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         }
 
         // Save the database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        appDelegate.databaseDocument.save()
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        appDelegate?.databaseDocument.save()
 
         // Update the table
-        tableView.deleteRows(at: indexPaths, with: .automatic)
+        tableView.deleteRows(at: indexPaths as [IndexPath], with: .automatic)
         let indexSet = NSMutableIndexSet()
         if (groups.isEmpty) {
             indexSet.add(Section.groups.rawValue)
@@ -329,12 +319,12 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
 
     func actionPressed(_ sender: UIBarButtonItem) {
         // Get the URL of the database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let url = URL(fileURLWithPath: appDelegate.databaseDocument.filename)
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let url = URL(fileURLWithPath: (appDelegate?.databaseDocument.filename)!)
 
         // Present the options to handle the database
         documentInteractionController = UIDocumentInteractionController(url: url)
-        let success = documentInteractionController!.presentOpenInMenu(from: standardToolbarItems[StandardButton.action.rawValue], animated: true)
+        let success = documentInteractionController!.presentOpenInMenu(from: standardToolbarItems[StandardButton.Action.rawValue], animated: true)
         if (!success) {
             let alertController = UIAlertController(title: nil, message: NSLocalizedString("There are no applications installed capable of importing KeePass files", comment: ""), preferredStyle: .actionSheet)
             let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
@@ -343,8 +333,8 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         }
     }
 
-    func addPressed(_ sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: NSLocalizedString("Add", comment: ""), message: nil, preferredStyle: .actionSheet)
+    func addPressed(sender: UIBarButtonItem) {
+        let alertController = UIAlertController(title: NSLocalizedString("Add", comment: ""), message: nil, preferredStyle: .alert)
 
         // Add an action to add a new group
         let groupAction = UIAlertAction(title: NSLocalizedString("Group", comment: ""), style: .default, handler: { (alertAction: UIAlertAction) in
@@ -363,19 +353,17 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         
-        alertController.popoverPresentationController?.barButtonItem = sender
-
         present(alertController, animated: true, completion: nil)
     }
 
     func addNewGroup() {
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let databaseDocument = appDelegate.databaseDocument!
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let databaseDocument = appDelegate?.databaseDocument
 
         // Create and add a group
-        let group = databaseDocument.kdbTree.createGroup(parentGroup)!
-        group.name = NSLocalizedString("New Group", comment: "")
-        group.image = parentGroup.image
+        let group = databaseDocument?.kdbTree.createGroup(parentGroup)
+        group?.name = NSLocalizedString("New Group", comment: "")
+        group?.image = parentGroup.image
 
         // Display the Rename Item view
         let storyboard = UIStoryboard(name: "RenameItem", bundle: nil)
@@ -386,17 +374,17 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
             self.parentGroup.addGroup(group)
 
             // Save the database
-//            databaseDocument.save()
+            databaseDocument?.save()
 
             // Add the group to the model
-            let index = self.groups.insertionIndexOf(group) {
+            let index = self.groups.insertionIndexOf(group!) {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
-            self.groups.insert(group, at: index)
+            self.groups.insert(group!, at: index)
 
             // Update the table
             if (self.groups.count == 1) {
-                self.tableView.reloadSections(IndexSet(integer: Section.groups.rawValue), with: .automatic)
+                self.tableView.reloadSections(NSIndexSet(index: Section.groups.rawValue) as IndexSet, with: .automatic)
             } else {
                 let indexPath = IndexPath(row: index, section: Section.groups.rawValue)
                 self.tableView.insertRows(at: [indexPath], with: .automatic)
@@ -409,27 +397,27 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
     }
     
     func addNewEntry() {
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let databaseDocument = appDelegate.databaseDocument!
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let databaseDocument = appDelegate?.databaseDocument
 
         // Create and add a entry
-        let entry = databaseDocument.kdbTree.createEntry(parentGroup)!
-        entry.setTitle(NSLocalizedString("New Entry", comment: ""))
-        entry.image = parentGroup.image
+        let entry = databaseDocument?.kdbTree.createEntry(parentGroup)
+        entry?.setTitle(NSLocalizedString("New Entry", comment: ""))
+        entry?.image = parentGroup.image
         parentGroup.addEntry(entry)
 
         // Save the database
-//        databaseDocument.save()
+        databaseDocument?.save()
 
         // Add the entry to the model
-        let index = self.entries.insertionIndexOf(entry) {
+        let index = self.entries.insertionIndexOf(entry!) {
             $0.title().localizedCaseInsensitiveCompare($1.title()) == .orderedAscending
         }
-        self.entries.insert(entry, at: index)
+        self.entries.insert(entry!, at: index)
 
         // Update the table
         if (self.entries.count == 1) {
-            self.tableView.reloadSections(IndexSet(integer: Section.entries.rawValue), with: .automatic)
+            self.tableView.reloadSections(NSIndexSet(index: Section.entries.rawValue) as IndexSet, with: .automatic)
         } else {
             let indexPath = IndexPath(row: index, section: Section.entries.rawValue)
             self.tableView.insertRows(at: [indexPath], with: .automatic)
@@ -438,13 +426,13 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         // Show the Entry view controller
         let viewController = EntryViewController(style: .grouped)
         viewController.entry = entry
-        viewController.title = entry.title()
+        viewController.title = entry?.title()
         viewController.isNewEntry = true
         navigationController?.pushViewController(viewController, animated: true)
     }
     
-    func deletePressed(_ sender: UIBarButtonItem) {
-        deleteItems(tableView.indexPathsForSelectedRows!)
+    func deletePressed(sender: UIBarButtonItem) {
+        deleteItems(indexPaths: tableView.indexPathsForSelectedRows!)
     }
 
     func movePressed(_ sender: UIBarButtonItem) {
@@ -521,22 +509,6 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         }
 
         present(navigationController, animated: true, completion: nil)
-    }
-
-    func updateSearchResults(for searchController: UISearchController) {
-        print("Updating search results....\n")
-/*
-        results.removeAllObjects()
-        
-        // Perform the search
-        DatabaseDocument.search(groupViewController?.parentGroup,
-                                searchText:searchController.searchBar.text, results:results )
-        
-        // Sort the results
-        results.sort(comparator: { (a, b) -> ComparisonResult in return (a as! KdbEntry).title().localizedCompare((b as! KdbEntry).title()) } )
-        
-        self.tableView.reloadData()
- */
     }
     
 }

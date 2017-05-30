@@ -43,6 +43,9 @@ class CheckMark: UIView {
             return
         }
 
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return
+        }
         
         // Sub-rectangle to draw the check mark inside of
         let r = self.bounds.insetBy(dx: 3, dy: 3)
@@ -51,31 +54,29 @@ class CheckMark: UIView {
         let w = r.width
         let h = r.height
         
-        if let context = UIGraphicsGetCurrentContext() {
-            // Draw the circle background
-            context.saveGState()
-            context.setShadow(offset: shadowOffset, blur: shadowBlurRadius, color: shadowColor.cgColor)
-            fillColor.setFill()
-            context.fillEllipse(in: r)
-            context.restoreGState()
-            
-            // Draw the circle
-            context.saveGState()
-            whiteColor.setStroke()
-            context.setLineWidth(1);
-            context.strokeEllipse(in: r)
-            context.restoreGState()
-            
-            // Draw the check mark
-            context.saveGState()
-            whiteColor.setStroke()
-            context.setLineWidth(1.3);
-            context.setLineCap(CGLineCap.square)
-            context.move(to: CGPoint(x: x + 0.27083 * w, y: y + 0.54167 * h))
-            context.addLine(to: CGPoint(x: x + 0.41667 * w, y: y + 0.68750 * h))
-            context.addLine(to: CGPoint(x: x + 0.75000 * w, y: y + 0.35417 * h))
-            context.strokePath()
-            context.restoreGState()
-        }
+        // Draw the circle background
+        context.saveGState()
+        context.setShadow(offset: shadowOffset, blur: shadowBlurRadius, color: shadowColor.cgColor)
+        fillColor.setFill()
+        context.fillEllipse(in: r)
+        context.restoreGState()
+        
+        // Draw the circle
+        context.saveGState()
+        whiteColor.setStroke()
+        context.setLineWidth(1);
+        context.strokeEllipse(in: r)
+        context.restoreGState()
+        
+        // Draw the check mark
+        context.saveGState()
+        whiteColor.setStroke()
+        context.setLineWidth(1.3);
+        context.setLineCap(CGLineCap.square)
+        context.move(to: CGPoint(x: x + 0.27083 * w, y: y + 0.54167 * h))
+        context.addLine(to: CGPoint(x: x + 0.41667 * w, y: y + 0.68750 * h))
+        context.addLine(to: CGPoint(x: x + 0.75000 * w, y: y + 0.35417 * h))
+        context.strokePath()
+        context.restoreGState()
     }
 }

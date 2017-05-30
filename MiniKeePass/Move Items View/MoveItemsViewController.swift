@@ -40,13 +40,15 @@ class MoveItemsViewController: UITableViewController {
         groupModels = []
 
         // Get parameters for the root
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
 
-        let rootGroup = appDelegate.databaseDocument.kdbTree.root!
-        let filename = appDelegate.databaseDocument.filename as NSString
+        let rootGroup = appDelegate?.databaseDocument.kdbTree.root
+        let filename = appDelegate?.databaseDocument.filename
+        
+        let url = URL(fileURLWithPath: (filename)!)
 
         // Recursivly add subgroups
-        addGroup(rootGroup, name: filename.lastPathComponent, indent: 0)
+        addGroup(rootGroup!, name: url.lastPathComponent, indent: 0)
     }
 
     func isSelectable(_ group: KdbGroup) -> Bool {
@@ -71,9 +73,9 @@ class MoveItemsViewController: UITableViewController {
         }
 
         // Check if trying to move entries to top level in 1.x database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let tree = appDelegate.databaseDocument.kdbTree!
-        if (containsEntry && group == tree.root && tree is Kdb3Tree) {
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let tree = appDelegate?.databaseDocument.kdbTree
+        if (containsEntry && group == tree?.root && tree is Kdb3Tree) {
             return false
         }
 
@@ -107,8 +109,8 @@ class MoveItemsViewController: UITableViewController {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: groupModel.selectable ? SelectableReuseIdentifier : UnselectableReuseIdentifier, for: indexPath) as! GroupCell
         cell.groupTitleLabel.text = groupModel.name
-        let imageFactory = ImageFactory.sharedInstance()!
-        cell.groupImageView.image = imageFactory.image(for: groupModel.group)
+        let imageFactory = ImageFactory.sharedInstance()
+        cell.groupImageView.image = imageFactory?.image(for: groupModel.group)
         cell.leadingContraint.constant = CGFloat(groupModel.indent * IndentWidth)
 
         return cell
@@ -134,9 +136,9 @@ class MoveItemsViewController: UITableViewController {
         }
 
         // Save the database
-        let appDelegate = MiniKeePassAppDelegate.getDelegate()!
-        let databaseDocument = appDelegate.databaseDocument!
-        databaseDocument.save()
+        let appDelegate = MiniKeePassAppDelegate.getDelegate()
+        let databaseDocument = appDelegate?.databaseDocument
+        databaseDocument?.save()
 
         groupSelected?(self, groupModel.group)
 

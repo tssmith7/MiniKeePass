@@ -26,12 +26,12 @@ class ImageSelectorViewController: UICollectionViewController {
     var selectedImage = -1
     
     var imageSelected: ((_ imageSelectorViewController: ImageSelectorViewController, _ selectedImage: Int) -> Void)?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let imageFactory = ImageFactory.sharedInstance()!
-        images = imageFactory.images() as! [UIImage]
+        let imageFactory = ImageFactory.sharedInstance()
+        images = imageFactory?.images() as! [UIImage]
     }
     
     override func viewDidAppear(_ animated: Bool) {
