@@ -338,13 +338,13 @@ class DBOptionsViewController: UITableViewController, UITextFieldDelegate {
             }
             
             if( keyDerivNameIndex == 0 ) {
+                tree?.kdfParams = KdbPassword.getDefaultKDFParameters(KdbUUID.getAES_KDFUUID())
                 // Map "Rounds" to the kdfParam NSNumber
-                tree?.kdfParams.addByteArray( KdbUUID.getAES_KDFUUID().getData(), forKey:KDF_KEY_UUID_BYTES)
                 let rounds = UInt64( keyDerivValueMap[keyDerivRowLabels[0][0]]! )
                 tree?.kdfParams.add( rounds, forKey:KDF_AES_KEY_ROUNDS )
             } else if( keyDerivNameIndex == 1 ) {
+                tree?.kdfParams = KdbPassword.getDefaultKDFParameters(KdbUUID.getArgon2())
                 // Map "Iterations", "Memory", and "Parallelism" to the kdfParam NSNumbers
-                tree?.kdfParams.addByteArray( KdbUUID.getArgon2().getData(), forKey:KDF_KEY_UUID_BYTES)
                 let iterations = UInt64( keyDerivValueMap[keyDerivRowLabels[1][0]]! )
                 tree?.kdfParams.add( iterations, forKey:KDF_ARGON2_KEY_ITERATIONS )
                 let memory = UInt64( keyDerivValueMap[keyDerivRowLabels[1][1]]! )
