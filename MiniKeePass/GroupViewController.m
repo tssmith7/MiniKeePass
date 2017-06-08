@@ -553,11 +553,20 @@ enum {
     UIActionSheetAutoDismiss *actionSheet;
 
     if (self.group.canAddEntries) {
+
         actionSheet = [[UIActionSheetAutoDismiss alloc] initWithTitle:NSLocalizedString(@"Add", nil)
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
                                     destructiveButtonTitle:nil
                                          otherButtonTitles:NSLocalizedString(@"Group", nil), NSLocalizedString(@"Entry", nil), nil];
+
+/*        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Add", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+ */
     } else {
         actionSheet = [[UIActionSheetAutoDismiss alloc] initWithTitle:NSLocalizedString(@"Add", nil)
                                                   delegate:self

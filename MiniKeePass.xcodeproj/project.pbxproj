@@ -1023,7 +1023,7 @@
 				ORGANIZATIONNAME = Self;
 				TargetAttributes = {
 					689DFFD413A4273F005EBD36 = {
-						DevelopmentTeam = TDWUL5774P;
+						DevelopmentTeam = MGD4WTF6BR;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.iCloud = {
@@ -1441,7 +1441,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = TDWUL5774P;
+				DEVELOPMENT_TEAM = MGD4WTF6BR;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					/usr/local/include,
@@ -1453,6 +1453,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.minikeepass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1464,7 +1465,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = TDWUL5774P;
+				DEVELOPMENT_TEAM = MGD4WTF6BR;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					/usr/local/include,
@@ -1476,6 +1477,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.minikeepass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

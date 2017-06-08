@@ -18,8 +18,19 @@
 
 @implementation UIActionSheetAutoDismiss
 
-- (id)init {
-    if (self = [super init]) {
+- (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... {
+    
+    self = [super initWithTitle:title delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
+    
+    if (self) {
+        va_list args;
+        va_start(args, otherButtonTitles);
+        
+        for (NSString *arg = otherButtonTitles; arg != nil; arg = va_arg(args, NSString*)) {
+            [self addButtonWithTitle:arg];
+        }
+        va_end(args);
+        
         NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
         if ([[UIDevice currentDevice].systemVersion intValue] >= 4) {
             // Close ourseleves when the app exits the foreground
