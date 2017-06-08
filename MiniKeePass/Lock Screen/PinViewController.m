@@ -31,7 +31,7 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.view.backgroundColor = [UIColor clearColor];
+//        self.view.backgroundColor = [UIColor clearColor];
 
         // Create a container view to hold everything
         UIView *view = [[UIView alloc] init];

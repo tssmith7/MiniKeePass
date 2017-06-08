@@ -686,6 +686,7 @@ enum {
         PinViewController *pinViewController = [[PinViewController alloc] init];
         pinViewController.titleLabel.text = NSLocalizedString(@"Set PIN", nil);
         pinViewController.delegate = self;
+        pinViewController.view.backgroundColor = [UIColor whiteColor];
         
         [self presentViewController:pinViewController animated:YES completion:nil];
     } else {
