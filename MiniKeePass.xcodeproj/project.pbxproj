@@ -391,7 +391,7 @@
 		689D043F13A42C82005EBD36 /* SelectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectionListViewController.m; sourceTree = "<group>"; };
 		689D044413A42C82005EBD36 /* TextEntryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEntryController.h; sourceTree = "<group>"; };
 		689D044513A42C82005EBD36 /* TextEntryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextEntryController.m; sourceTree = "<group>"; };
-		689DFFD513A4273F005EBD36 /* MiniKeePass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniKeePass.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		689DFFD513A4273F005EBD36 /* MiniKeePassV1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniKeePassV1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		689DFFD913A4273F005EBD36 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		689DFFDB13A4273F005EBD36 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		689DFFDD13A4273F005EBD36 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -772,7 +772,7 @@
 		689DFFD613A4273F005EBD36 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				689DFFD513A4273F005EBD36 /* MiniKeePass.app */,
+				689DFFD513A4273F005EBD36 /* MiniKeePassV1.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -987,9 +987,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		689DFFD413A4273F005EBD36 /* MiniKeePass */ = {
+		689DFFD413A4273F005EBD36 /* MiniKeePassV1 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 689D000613A42740005EBD36 /* Build configuration list for PBXNativeTarget "MiniKeePass" */;
+			buildConfigurationList = 689D000613A42740005EBD36 /* Build configuration list for PBXNativeTarget "MiniKeePassV1" */;
 			buildPhases = (
 				689DFFD113A4273F005EBD36 /* Sources */,
 				689DFFD213A4273F005EBD36 /* Frameworks */,
@@ -1003,9 +1003,9 @@
 				78477A1C1ED2A86A001F6438 /* PBXTargetDependency */,
 				78477A481ED2AAA6001F6438 /* PBXTargetDependency */,
 			);
-			name = MiniKeePass;
+			name = MiniKeePassV1;
 			productName = MiniKeePass;
-			productReference = 689DFFD513A4273F005EBD36 /* MiniKeePass.app */;
+			productReference = 689DFFD513A4273F005EBD36 /* MiniKeePassV1.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1063,7 +1063,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				689DFFD413A4273F005EBD36 /* MiniKeePass */,
+				689DFFD413A4273F005EBD36 /* MiniKeePassV1 */,
 			);
 		};
 /* End PBXProject section */
@@ -1480,7 +1480,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		689D000613A42740005EBD36 /* Build configuration list for PBXNativeTarget "MiniKeePass" */ = {
+		689D000613A42740005EBD36 /* Build configuration list for PBXNativeTarget "MiniKeePassV1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				689D000713A42740005EBD36 /* Debug */,
