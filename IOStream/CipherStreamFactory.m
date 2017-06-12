@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Jason Rush and John Flanagan. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #import "CipherStreamFactory.h"
 #import "AesInputStream.h"
 #import "AesOutputStream.h"
@@ -26,30 +27,29 @@
 + (InputStream *)getInputStream:(KdbUUID *)uuid stream:(InputStream*)s key:(NSData *)key iv:(NSData *)iv {
     InputStream *stream = nil;
     
-    if( [uuid isEqual:[KdbUUID getAESUUID]] ) {
+    if ([uuid isEqual:[KdbUUID getAESUUID]]) {
         stream = [[AesInputStream alloc] initWithInputStream:s key:key iv:iv];
-    } else if( [uuid isEqual:[KdbUUID getChaCha20UUID]] ) {
+    } else if ([uuid isEqual:[KdbUUID getChaCha20UUID]]) {
         stream = [[ChaCha20InputStream alloc] initWithInputStream:s key:key iv:iv];
     } else {
-        printf("UUID : %s\n", [[Utils hexDumpData:[uuid getData]] UTF8String]);
         @throw [NSException exceptionWithName:@"CryptoException" reason:@"Unknown cipher" userInfo:nil];
     }
+    
     return stream;
 }
 
 + (OutputStream *)getOutputStream:(KdbUUID *)uuid stream:(OutputStream*)s key:(NSData *)key iv:(NSData *)iv {
     OutputStream *stream = nil;
     
-    if( [uuid isEqual:[KdbUUID getAESUUID]] ) {
+    if ([uuid isEqual:[KdbUUID getAESUUID]]) {
         stream = [[AesOutputStream alloc] initWithOutputStream:s key:key iv:iv];
-    } else if( [uuid isEqual:[KdbUUID getChaCha20UUID]] ) {
+    } else if ([uuid isEqual:[KdbUUID getChaCha20UUID]]) {
         stream = [[ChaCha20OutputStream alloc] initWithOutputStream:s key:key iv:iv];
     } else {
-        printf("UUID : %s\n", [[Utils hexDumpData:[uuid getData]] UTF8String]);
         @throw [NSException exceptionWithName:@"CryptoException" reason:@"Unknown cipher" userInfo:nil];
     }
-    return stream;
     
+    return stream;
 }
 
 @end

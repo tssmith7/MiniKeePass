@@ -19,6 +19,7 @@
 #import "Base64.h"
 #import "DDXML.h"
 #import "DDXMLElementAdditions.h"
+#import "Utils.h"
 
 @interface Kdb4Persist (PrivateMethods)
 - (DDXMLDocument *)persistTree;
@@ -72,7 +73,7 @@
     element = [DDXMLNode elementWithName:@"Meta"];
     [element addChild:[DDXMLNode elementWithName:@"Generator"
                                      stringValue:tree.generator]];
-    if( tree.dbVersion < KDBX40_VERSION ) {
+    if (tree.dbVersion < KDBX40_VERSION) {
         [element addChild:[DDXMLNode elementWithName:@"HeaderHash"
                                     stringValue:[self persistBase64Data:tree.headerHash]]];
     }
@@ -301,15 +302,15 @@
     [root addChild:timesElement];
 
     // Add the standard string fields
-    if( entry.titleStringField != nil )
+    if (entry.titleStringField != nil)
         [root addChild:[self persistStringField:entry.titleStringField]];
-    if( entry.usernameStringField != nil )
+    if (entry.usernameStringField != nil)
         [root addChild:[self persistStringField:entry.usernameStringField]];
-    if( entry.passwordStringField != nil )
+    if (entry.passwordStringField != nil)
         [root addChild:[self persistStringField:entry.passwordStringField]];
-    if( entry.urlStringField != nil )
+    if (entry.urlStringField != nil)
         [root addChild:[self persistStringField:entry.urlStringField]];
-    if( entry.notesStringField != nil )
+    if (entry.notesStringField != nil)
         [root addChild:[self persistStringField:entry.notesStringField]];
 
     // Add the string fields
@@ -417,7 +418,7 @@
 
 - (NSString *)encodeDateTime:(NSDate *)date {
     
-    if( tree.dbVersion >= KDBX40_VERSION ) {
+    if (tree.dbVersion >= KDBX40_VERSION) {
         uint64_t lSec = (uint64_t)[date timeIntervalSinceDate:Kdbx4ReferenceDate];
         NSData *secBytes = [Utils getUInt64Bytes:lSec];
         return [self persistBase64Data:secBytes];

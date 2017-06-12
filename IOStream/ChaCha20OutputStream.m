@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Jason Rush and John Flanagan. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,16 +42,14 @@
 }
 
 - (NSUInteger)write:(const void *)bytes length:(NSUInteger)bytesLength {
-
     // Ensure the buffer has enough space to store the encrypted data
-
     [self ensureBufferCapacity:bytesLength];
-    if( buffer == nil ) {
+    if (buffer == nil) {
         @throw [NSException exceptionWithName:@"MallocException" reason:@"Failed allocate memory" userInfo:nil];
         
     }
     
-    memcpy( buffer, bytes, bytesLength );
+    memcpy(buffer, bytes, bytesLength);
     
     // Encrypt the data
     [cipher Encrypt:buffer iOffset:0 count:bytesLength];
@@ -61,11 +59,6 @@
 }
 
 - (void)close {
-/*
- // Write the encrypted data
-    [outputStream write:buffer length:n];
- */
-    
     [outputStream close];
 }
 

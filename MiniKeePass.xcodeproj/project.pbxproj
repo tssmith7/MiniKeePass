@@ -127,6 +127,7 @@
 		68E08316146F2749001C4EDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 68E08314146F2749001C4EDF /* InfoPlist.strings */; };
 		68EA62DB1CC972F300B33E42 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68EA62DA1CC972F300B33E42 /* LaunchScreen.storyboard */; };
 		68EBC2D61613394D00E8E799 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68EBC2D51613394D00E8E799 /* QuartzCore.framework */; };
+		7815DF3C1EEE5AD600A37CC4 /* VariantDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 7815DF3B1EEE5AD600A37CC4 /* VariantDictionary.m */; };
 		782C93DC1E8E35BF00B6AC82 /* BlockCipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 782C93D71E8E35BF00B6AC82 /* BlockCipher.m */; };
 		782C93DD1E8E35BF00B6AC82 /* ChaCha20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 782C93D91E8E35BF00B6AC82 /* ChaCha20Cipher.m */; };
 		782C93DE1E8E35BF00B6AC82 /* Salsa20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 782C93DB1E8E35BF00B6AC82 /* Salsa20Cipher.m */; };
@@ -454,6 +455,8 @@
 		68E0831C146F2D37001C4EDF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68EA62DA1CC972F300B33E42 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		68EBC2D51613394D00E8E799 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7815DF3A1EEE5AD600A37CC4 /* VariantDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariantDictionary.h; sourceTree = "<group>"; };
+		7815DF3B1EEE5AD600A37CC4 /* VariantDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariantDictionary.m; sourceTree = "<group>"; };
 		782C93D61E8E35BF00B6AC82 /* BlockCipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlockCipher.h; path = Crypto/BlockCipher.h; sourceTree = "<group>"; };
 		782C93D71E8E35BF00B6AC82 /* BlockCipher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlockCipher.m; path = Crypto/BlockCipher.m; sourceTree = "<group>"; };
 		782C93D81E8E35BF00B6AC82 /* ChaCha20Cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChaCha20Cipher.h; path = Crypto/ChaCha20Cipher.h; sourceTree = "<group>"; };
@@ -694,6 +697,8 @@
 				689D02F013A42B63005EBD36 /* Utils.m */,
 				689D02F113A42B63005EBD36 /* UUID.h */,
 				689D02F213A42B63005EBD36 /* UUID.m */,
+				7815DF3A1EEE5AD600A37CC4 /* VariantDictionary.h */,
+				7815DF3B1EEE5AD600A37CC4 /* VariantDictionary.m */,
 			);
 			path = KeePassLib;
 			sourceTree = "<group>";
@@ -1208,6 +1213,7 @@
 				689D03ED13A42B63005EBD36 /* DDXMLNode.m in Sources */,
 				782C93E11E8E35EA00B6AC82 /* HmacInputStream.m in Sources */,
 				689D044F13A42C82005EBD36 /* DatabaseDocument.m in Sources */,
+				7815DF3C1EEE5AD600A37CC4 /* VariantDictionary.m in Sources */,
 				689D045013A42C82005EBD36 /* DatabaseManager.m in Sources */,
 				782C93E41E8E361200B6AC82 /* ChaCha20InputStream.m in Sources */,
 				78477A061ED298BE001F6438 /* CloudDocument.m in Sources */,

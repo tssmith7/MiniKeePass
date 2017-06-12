@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Jason Rush and John Flanagan. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@
 - (id)initWithOutputStream:(OutputStream *)stream key:(NSData *)hkey {
     self = [super init];
     if (self) {
-        if( stream == nil ) {
+        if (stream == nil) {
             @throw [NSException exceptionWithName:@"IOException" reason:@"Bad Value" userInfo:nil];
         }
-        if( [hkey length] != 64 ) {
+        if ([hkey length] != 64) {
             @throw [NSException exceptionWithName:@"IOException" reason:@"Key length error" userInfo:nil];
         }
         outputStream = stream;
@@ -88,11 +88,11 @@
 
     // Compute the Hmac-SHA256 hash
     CCHmacContext ctx;
-    CCHmacInit( &ctx, kCCHmacAlgSHA256, blockKey.bytes, [blockKey length] );
-    CCHmacUpdate( &ctx, idxBytes.bytes, [idxBytes length] );
-    CCHmacUpdate( &ctx, sizeBytes.bytes, [sizeBytes length] );
-    CCHmacUpdate( &ctx, buffer, bufferOffset );
-    CCHmacFinal( &ctx, calcHmac );
+    CCHmacInit(&ctx, kCCHmacAlgSHA256, blockKey.bytes, [blockKey length]);
+    CCHmacUpdate(&ctx, idxBytes.bytes, [idxBytes length]);
+    CCHmacUpdate(&ctx, sizeBytes.bytes, [sizeBytes length]);
+    CCHmacUpdate(&ctx, buffer, bufferOffset);
+    CCHmacFinal(&ctx, calcHmac);
 
     // Write out the HMAC Value
     [outputStream write:calcHmac length:32];
@@ -110,7 +110,6 @@
 }
 
 - (void)close {
-
     if (bufferOffset > 0) {
         // Write the last block if needed
         [self writeHmacBlock];
@@ -123,10 +122,8 @@
 }
 
 
--(NSData*) getHMACKey {
-
+- (NSData*)getHMACKey {
     return [HmacInputStream getHMACKey:(uint8_t*)hmacKey.bytes keylen:[hmacKey length] blockIndex:blockIndex];
 }
-
 
 @end

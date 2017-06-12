@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Jason Rush and John Flanagan. All rights reserved.
+ * Copyright 2017 Jason Rush and John Flanagan. All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,19 +20,15 @@
 
 @interface HmacInputStream : InputStream {
     InputStream *inputStream;
-    
     NSData *hmacKey;
-    
     uint64_t blockIndex;
-    
     uint8_t *buffer;
     uint32_t bufferOffset;
     uint32_t bufferLength;
-    
     BOOL eof;
 }
 
 - (id)initWithInputStream:(InputStream *)stream key:(NSData*)key;
-+(NSData*) getHMACKey:(uint8_t*)key keylen:(size_t)keylen blockIndex:(uint64_t)bidx;
++ (NSData*)getHMACKey:(uint8_t*)key keylen:(size_t)keylen blockIndex:(uint64_t)bidx;
 
 @end
