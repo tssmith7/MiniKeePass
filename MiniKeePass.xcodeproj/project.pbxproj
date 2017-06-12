@@ -101,7 +101,6 @@
 		689FBE641AB271C6005CB6BD /* KeypadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE5B1AB271C6005CB6BD /* KeypadButton.m */; };
 		689FBE651AB271C6005CB6BD /* KeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE5D1AB271C6005CB6BD /* KeypadView.m */; };
 		689FBE661AB271C6005CB6BD /* LockScreenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE5F1AB271C6005CB6BD /* LockScreenManager.m */; };
-		689FBE671AB271C6005CB6BD /* LockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE611AB271C6005CB6BD /* LockViewController.m */; };
 		689FBE681AB271C6005CB6BD /* PinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE631AB271C6005CB6BD /* PinViewController.m */; };
 		689FBE701AB2720D005CB6BD /* CharacterSetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE6B1AB2720D005CB6BD /* CharacterSetsViewController.m */; };
 		689FBE711AB2720D005CB6BD /* LengthCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 689FBE6D1AB2720D005CB6BD /* LengthCell.m */; };
@@ -405,8 +404,6 @@
 		689FBE5D1AB271C6005CB6BD /* KeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypadView.m; sourceTree = "<group>"; };
 		689FBE5E1AB271C6005CB6BD /* LockScreenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockScreenManager.h; sourceTree = "<group>"; };
 		689FBE5F1AB271C6005CB6BD /* LockScreenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockScreenManager.m; sourceTree = "<group>"; };
-		689FBE601AB271C6005CB6BD /* LockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockViewController.h; sourceTree = "<group>"; };
-		689FBE611AB271C6005CB6BD /* LockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockViewController.m; sourceTree = "<group>"; };
 		689FBE621AB271C6005CB6BD /* PinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PinViewController.h; sourceTree = "<group>"; };
 		689FBE631AB271C6005CB6BD /* PinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinViewController.m; sourceTree = "<group>"; };
 		689FBE6A1AB2720D005CB6BD /* CharacterSetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterSetsViewController.h; sourceTree = "<group>"; };
@@ -880,8 +877,6 @@
 				689FBE5D1AB271C6005CB6BD /* KeypadView.m */,
 				689FBE5E1AB271C6005CB6BD /* LockScreenManager.h */,
 				689FBE5F1AB271C6005CB6BD /* LockScreenManager.m */,
-				689FBE601AB271C6005CB6BD /* LockViewController.h */,
-				689FBE611AB271C6005CB6BD /* LockViewController.m */,
 				689FBE621AB271C6005CB6BD /* PinViewController.h */,
 				689FBE631AB271C6005CB6BD /* PinViewController.m */,
 			);
@@ -1197,7 +1192,6 @@
 				689D03E213A42B63005EBD36 /* KdbReaderFactory.m in Sources */,
 				689FBE991AB272BD005CB6BD /* ImageFactory.m in Sources */,
 				6837C360188C9ED30018D588 /* SelectGroupViewController.m in Sources */,
-				689FBE671AB271C6005CB6BD /* LockViewController.m in Sources */,
 				784779FE1ED29812001F6438 /* DropboxDocument.m in Sources */,
 				68496E751AB34F8800370876 /* AppSettings.m in Sources */,
 				689D03E313A42B63005EBD36 /* KdbWriterFactory.m in Sources */,

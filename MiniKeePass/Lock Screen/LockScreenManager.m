@@ -17,11 +17,9 @@
 
 // See Technical Q&A QA1838
 
-
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "LockScreenManager.h"
-#import "LockViewController.h"
 #import "MiniKeePassAppDelegate.h"
 #import "AppSettings.h"
 #import "KeychainUtils.h"
@@ -30,7 +28,6 @@
 
 @interface LockScreenManager () <PinViewControllerDelegate>
 @property (nonatomic, strong) PinViewController *pinViewController;
-@property (nonatomic, assign) BOOL unlocked;
 @end
 
 @implementation LockScreenManager {
@@ -51,8 +48,6 @@ static LockScreenManager *sharedInstance = nil;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _unlocked = NO;
-        
         touchIDFailed = NO;
         
         lockWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -94,18 +89,14 @@ static LockScreenManager *sharedInstance = nil;
 #pragma mark - Lock/Unlock
 
 - (BOOL)shouldCheckPin {
-    // Check if we're unlocked
-    if (self.unlocked) {
-        return NO;
-    }
-
     // Check if the PIN is enabled
     AppSettings *appSettings = [AppSettings sharedInstance];
     if (![appSettings pinEnabled]) {
         return NO;
     }
     
-    if( touchIDFailed ) {
+    // Check if touchID check failed
+    if (touchIDFailed) {
         return YES;
     }
 
@@ -120,38 +111,25 @@ static LockScreenManager *sharedInstance = nil;
     return timeInterval > [appSettings pinLockTimeout];
 }
 
-- (BOOL)shouldLock {
-
-    // We should lock if the PIN is enabled or closing the database is enabled
-    AppSettings *appSettings = [AppSettings sharedInstance];
-    return [appSettings pinEnabled] || [appSettings closeEnabled];
-}
-
 - (void)checkPin {
     // Perform Touch ID if enabled and not already failed.
     AppSettings *appSettings = [AppSettings sharedInstance];
-    if ([appSettings touchIdEnabled] && !touchIDFailed ) {
+    if ([appSettings touchIdEnabled] && !touchIDFailed) {
         [self showTouchId];
     }
-}
-
-- (void)showLockScreen {
-
-    self.unlocked = false;
-
-    [lockWindow makeKeyAndVisible];
 }
 
 - (void)hideLockScreen {
 
     [UIView animateWithDuration:0.25
-                     animations:^{self.pinViewController.view.alpha = 0.0;}
-                     completion:^(BOOL finished){
+                     animations:^{
+                         lockWindow.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
                          [self.pinViewController clearPin];
                          touchIDFailed = NO;
                          lockWindow.hidden = YES;
-                         self.pinViewController.view.alpha = 1.0;
-                         self.unlocked = true;
+                         lockWindow.alpha = 1.0;
                      }];
 }
 
@@ -250,7 +228,7 @@ static LockScreenManager *sharedInstance = nil;
 #pragma mark - Closing the database
 
 - (BOOL)shouldCloseDatabase {
-    // Check if the PIN is enabled
+    // Check if Close on Timeout is enabled
     AppSettings *appSettings = [AppSettings sharedInstance];
     if (![appSettings closeEnabled]) {
         return NO;
@@ -270,8 +248,10 @@ static LockScreenManager *sharedInstance = nil;
 #pragma mark - Application Notification Handlers
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-    if ([self shouldCheckPin]) {
-        [self showLockScreen];
+    // Lock if the PIN is enabled
+    AppSettings *appSettings = [AppSettings sharedInstance];
+    if ([appSettings pinEnabled]) {
+        [lockWindow makeKeyAndVisible];
         [self checkPin];
     }
 }
@@ -290,12 +270,10 @@ static LockScreenManager *sharedInstance = nil;
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
-    if ([self shouldLock]) {
-        AppSettings *appSettings = [AppSettings sharedInstance];
-        [appSettings setExitTime:[NSDate date]];
-        
-        [self showLockScreen];
-    }
+    AppSettings *appSettings = [AppSettings sharedInstance];
+    [appSettings setExitTime:[NSDate date]];
+    [self.pinViewController showPinKeypad:[appSettings pinEnabled]];
+    [lockWindow makeKeyAndVisible];
 }
 
 @end

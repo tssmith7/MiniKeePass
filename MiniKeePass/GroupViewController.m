@@ -559,14 +559,6 @@ enum {
                                          cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
                                     destructiveButtonTitle:nil
                                          otherButtonTitles:NSLocalizedString(@"Group", nil), NSLocalizedString(@"Entry", nil), nil];
-
-/*        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Add", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction * action) {}];
-        
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
- */
     } else {
         actionSheet = [[UIActionSheetAutoDismiss alloc] initWithTitle:NSLocalizedString(@"Add", nil)
                                                   delegate:self
@@ -585,9 +577,9 @@ enum {
 
     // Add a new group/entry
     NSIndexPath *indexPath;
-    if (buttonIndex == 0) {
+    if (buttonIndex == 1) {
         indexPath = [self addNewGroup];
-    } else if (buttonIndex == 1) {
+    } else if (buttonIndex == 2) {
         indexPath = [self addNewEntry];
     } else {
         @throw [NSException exceptionWithName:@"RuntimeException" reason:@"Illegal buttonIndex" userInfo:nil];
