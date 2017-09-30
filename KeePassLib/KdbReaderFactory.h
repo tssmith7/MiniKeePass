@@ -15,5 +15,6 @@
 }
 
 + (KdbTree*)load:(NSString*)filename withPassword:(KdbPassword*)kdbPassword;
++ (KdbTree*)decrypt:(NSData*)contents withPassword:(KdbPassword*)kdbPassword;
 
 @end

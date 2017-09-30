@@ -114,21 +114,35 @@
 
 - (void)setDatabaseDocument:(DatabaseDocument *)newDatabaseDocument {
     if (_databaseDocument != nil) {
-        [self closeDatabase];
+        [_databaseDocument closeWithCompletionHandler:^(BOOL success) {
+            _databaseDocument = newDatabaseDocument;
+            
+            UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+            FilesViewController * filesViewController = navController.viewControllers.firstObject;
+            
+            [filesViewController performSegueWithIdentifier:@"fileOpened" sender:self];
+        } ];
+        return;
+    } else {
+        _databaseDocument = newDatabaseDocument;
+        
+        UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+        FilesViewController * filesViewController = navController.viewControllers.firstObject;
+        
+        [filesViewController performSegueWithIdentifier:@"fileOpened" sender:self];
     }
-    
-    _databaseDocument = newDatabaseDocument;
-    
-    UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
-    FilesViewController * filesViewController = navController.viewControllers.firstObject;
-    
-    [filesViewController performSegueWithIdentifier:@"fileOpened" sender:self];
 }
 
 - (void)closeDatabase {
     // Close any open database views
     [self.navigationController popToRootViewControllerAnimated:NO];
     
+    [_databaseDocument closeWithCompletionHandler:^(BOOL success) {
+        if (!success) {
+            NSLog(@"Error Closing Database!");
+        }
+    } ];
+
     _databaseDocument = nil;
 }
 

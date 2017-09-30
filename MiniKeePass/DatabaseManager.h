@@ -21,6 +21,7 @@
 
 /// A string containing the name of the KeePass DatabaseDocument to be managed
 @property (nonatomic, copy) NSString *selectedFilename;
+@property (nonatomic, copy) NSURL *fileURL;
 
 /// Create a DatabaseManager instance
 + (DatabaseManager*)sharedInstance;
@@ -34,8 +35,8 @@
 - (void)renameDatabase:(NSURL *)originalUrl newUrl:(NSURL *)newUrl;
 
 /// Open the specified KeePass DatabaseDocument
-/// @param path Path to the chosen KeePass DatabaseDocument
+/// @param url File URL pointing to the chosen KeePass DatabaseDocument
 /// @param animated Animate the ViewController transition
-- (void)openDatabaseDocument:(NSString*)path animated:(BOOL)newAnimated;
+- (void)openDatabaseDocument:(NSURL*)url animated:(BOOL)newAnimated;
 
 @end

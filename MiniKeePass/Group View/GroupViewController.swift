@@ -143,7 +143,7 @@ class GroupViewController: UITableViewController {
 
         documentInteractionController?.dismissMenu(animated: false)
     }
-
+        
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         return !isEditing
     }

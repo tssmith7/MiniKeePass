@@ -142,7 +142,8 @@ static DatabaseManager *sharedInstance;
                                                              keyFile:nil];
     
     // Create the new database
-    [writer newFile:url.path withPassword:kdbPassword];
+    NSData *fileData = [writer newDatabase:kdbPassword];
+    [fileData writeToURL:url atomically:YES];
     
     // Store the password in the keychain
     if ([[AppSettings sharedInstance] rememberPasswordsEnabled]) {
@@ -175,17 +176,18 @@ static DatabaseManager *sharedInstance;
     }
 }
 
-- (void)openDatabaseDocument:(NSString*)filename animated:(BOOL)animated {
+- (void)openDatabaseDocument:(NSURL*)url animated:(BOOL)animated {
     BOOL databaseLoaded = NO;
 
-    self.selectedFilename = filename;
+    self.fileURL = url;
+    self.selectedFilename = [url lastPathComponent];
 
     // Get the application delegate
     AppDelegate *appDelegate = [AppDelegate getDelegate];
 
     // Get the documents directory
     NSString *documentsDirectory = [AppDelegate documentsDirectory];
-
+    
     // Load the password and keyfile from the keychain
     NSString *password = [KeychainUtils stringForKey:self.selectedFilename
                                       andServiceName:KEYCHAIN_PASSWORDS_SERVICE];
@@ -195,7 +197,7 @@ static DatabaseManager *sharedInstance;
     // Try and load the database with the cached password from the keychain
     if (password != nil || keyFile != nil) {
         // Get the absolute path to the database
-        NSString *path = [documentsDirectory stringByAppendingPathComponent:self.selectedFilename];
+//        NSString *path = [documentsDirectory stringByAppendingPathComponent:self.selectedFilename];
 
         // Get the absolute path to the keyfile
         NSString *keyFilePath = nil;
@@ -205,12 +207,19 @@ static DatabaseManager *sharedInstance;
 
         // Load the database
         @try {
-            DatabaseDocument *dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+            DatabaseDocument *dd = [[DatabaseDocument alloc] initWithURL:self.fileURL password:password keyFile:keyFilePath];
 
             databaseLoaded = YES;
 
-            // Set the database document in the application delegate
-            appDelegate.databaseDocument = dd;
+            // Open the database
+            [dd openWithCompletionHandler:^(BOOL success) {
+                if (success) {
+                    // Set the database document in the application delegate
+                    appDelegate.databaseDocument = dd;
+                } else {
+                    // FIXME: Handle opening error!
+                }
+            }];
         } @catch (NSException *exception) {
             // Ignore
         }
@@ -231,7 +240,7 @@ static DatabaseManager *sharedInstance;
         };
 
         // Initialize the filename
-        passwordEntryViewController.filename = filename;
+        passwordEntryViewController.filename = self.selectedFilename;
 
         // Load the key files
         passwordEntryViewController.keyFiles = [self getKeyFiles];
@@ -241,8 +250,8 @@ static DatabaseManager *sharedInstance;
 }
 
 - (void)openDatabaseWithPasswordEntryViewController:(PasswordEntryViewController *)passwordEntryViewController {
-    NSString *documentsDirectory = [AppDelegate documentsDirectory];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:self.selectedFilename];
+//    NSString *documentsDirectory = [AppDelegate documentsDirectory];
+//    NSString *path = [documentsDirectory stringByAppendingPathComponent:self.selectedFilename];
 
     // Get the password
     NSString *password = [passwordEntryViewController getPassword];
@@ -260,9 +269,23 @@ static DatabaseManager *sharedInstance;
 
     // Load the database
     @try {
-        // Open the database
-        DatabaseDocument *dd = [[DatabaseDocument alloc] initWithFilename:path password:password keyFile:keyFilePath];
+        // Initialize the database
+        DatabaseDocument *dd = [[DatabaseDocument alloc] initWithURL:self.fileURL password:password keyFile:keyFilePath];
 
+            // Open the database
+        [dd openWithCompletionHandler:^(BOOL success) {
+            if (success) {
+                // Dismiss the view controller, and after animation set the database document
+                [passwordEntryViewController dismissViewControllerAnimated:YES completion:^{
+                    // Set the database document in the application delegate
+                    AppDelegate *appDelegate = [AppDelegate getDelegate];
+                    appDelegate.databaseDocument = dd;
+                }];
+            } else {
+                // FIXME: Handle error
+            }
+        }];
+        
         // Store the password in the keychain
         if ([[AppSettings sharedInstance] rememberPasswordsEnabled]) {
             [KeychainUtils setString:password forKey:self.selectedFilename
@@ -271,12 +294,6 @@ static DatabaseManager *sharedInstance;
                       andServiceName:KEYCHAIN_KEYFILES_SERVICE];
         }
 
-        // Dismiss the view controller, and after animation set the database document
-        [passwordEntryViewController dismissViewControllerAnimated:YES completion:^{
-            // Set the database document in the application delegate
-            AppDelegate *appDelegate = [AppDelegate getDelegate];
-            appDelegate.databaseDocument = dd;
-        }];
     } @catch (NSException *exception) {
         NSLog(@"%@", exception);
 // FIXME Need a way of showing the error

@@ -16,8 +16,9 @@
  */
 
 import UIKit
+import MobileCoreServices
 
-class FilesViewController: UITableViewController, NewDatabaseDelegate {
+class FilesViewController: UITableViewController, NewDatabaseDelegate, UIDocumentMenuDelegate, UIDocumentPickerDelegate {
     private let databaseReuseIdentifier = "DatabaseCell"
     private let keyFileReuseIdentifier = "KeyFileCell"
 
@@ -45,7 +46,14 @@ class FilesViewController: UITableViewController, NewDatabaseDelegate {
         
         tableView.reloadData()
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let appDelegate = AppDelegate.getDelegate()
+        if (appDelegate?.databaseDocument != nil ) {
+            appDelegate?.closeDatabase()
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "newDatabase"?:
@@ -166,7 +174,8 @@ class FilesViewController: UITableViewController, NewDatabaseDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Load the database
         let databaseManager = DatabaseManager.sharedInstance()
-        databaseManager?.openDatabaseDocument(databaseFiles[indexPath.row], animated: true)
+        let fileURL = AppDelegate.documentsDirectoryUrl()?.appendingPathComponent(databaseFiles[indexPath.row])
+        databaseManager?.openDatabaseDocument(fileURL, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -241,5 +250,66 @@ class FilesViewController: UITableViewController, NewDatabaseDelegate {
             let indexPath = IndexPath(row: index, section: Section.databases.rawValue)
             self.tableView.insertRows(at: [indexPath], with: .right)
         }
+    }
+    
+    @IBAction func docPicker(_ sender: UIBarButtonItem) {
+//        if let iCloudURL = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
+//            let docURL = iCloudURL.appendingPathComponent("Documents")
+/*            let MKPURL = docURL.appendingPathComponent("MiniKeePass")
+            do {
+                try FileManager.default.createDirectory(at: MKPURL, withIntermediateDirectories: false, attributes: nil)
+            } catch { print(error) }
+            let databaseManager = DatabaseManager.sharedInstance()
+            let testURL = docURL.appendingPathComponent("testV1_dummy.kdb")
+            databaseManager?.newDatabase(testURL, password: "test", version: 1)
+             */
+//        }
+//        let UTIs = ["com.github.tssmith.MiniKeePass.kdb", "com.github.tssmith.MiniKeePass.kdbx"] as [String]
+        let UTIs = [/*kUTTypeJPEG, kUTTypeData, kUTTypeContent kUTTypeItem,*/ kUTTypeData] as [String]
+        
+//        let docDirURL = AppDelegate.documentsDirectoryUrl()
+        
+//        let fileURL = AppDelegate.documentsDirectoryUrl()?.appendingPathComponent("localDB.kdbx")
+        
+//        let docMenu = UIDocumentMenuViewController.init(url: fileURL!, in: UIDocumentPickerMode.exportToService)
+        let docMenu = UIDocumentMenuViewController.init(documentTypes: UTIs, in: UIDocumentPickerMode.open)
+        // maybe this should/could be kUTTypeItem and UIDocumentPickerModeImport,
+        // but JPEG/Open ist the only way my Owncloud-Provider shows up in document menu.
+        
+        docMenu.delegate = self
+//        docPicker.modalInPopover = UIModalPresentationPopover
+//        docPicker.popoverPresentationController.barButtonItem = sender
+        self.present(docMenu, animated:true, completion:nil)
+    }
+
+    @available(iOS 8.0, *)
+    func documentMenu(_ documentMenu: UIDocumentMenuViewController,
+                      didPickDocumentPicker docPicker: UIDocumentPickerViewController) {
+        docPicker.delegate = self
+        self.present(docPicker, animated:true, completion:nil)
+    }
+
+    @available(iOS 8.0, *)
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        print("url is \(url.debugDescription)")
+        let resourceKeys: Set = [URLResourceKey.isWritableKey, URLResourceKey.contentModificationDateKey]
+        var accessing = false
+        do {
+            accessing = url.startAccessingSecurityScopedResource()
+            let values = try url.promisedItemResourceValues(forKeys: resourceKeys)
+            print("writable = \(values.isWritable!)")
+            print("modification Date = \(values.contentModificationDate!)")
+            if (accessing) {
+                url.stopAccessingSecurityScopedResource()
+            }
+        } catch {
+            print("Cannot access resources.")
+            if (accessing) {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let databaseManager = DatabaseManager.sharedInstance()
+        databaseManager?.openDatabaseDocument(url, animated: true)
     }
 }

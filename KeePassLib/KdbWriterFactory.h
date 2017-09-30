@@ -24,5 +24,6 @@
 }
 
 + (void)persist:(KdbTree*)tree file:(NSString*)filename withPassword:(KdbPassword*)kdbPassword;
++ (NSData*)encrypt:(KdbTree*)tree withPassword:(KdbPassword*)kdbPassword;
 
 @end

@@ -15,7 +15,16 @@
 @implementation KdbReaderFactory
 
 + (KdbTree*)load:(NSString*)filename withPassword:(KdbPassword*)kdbPassword {
-    FileInputStream *inputStream = [[FileInputStream alloc] initWithFilename:filename];
+    NSData *fileContents = [NSData dataWithContentsOfFile:filename];
+
+    return [KdbReaderFactory decrypt:fileContents withPassword:kdbPassword];
+}
+
++ (KdbTree*)decrypt:(NSData*)contents withPassword:(KdbPassword*)kdbPassword {
+    DataInputStream *inputStream = [[DataInputStream alloc] initWithData:contents];
+    
+//    FileInputStream *inputStream = [[FileInputStream alloc] initWithFilename:filename];
+
     uint32_t sig1 = [inputStream readInt32];
     sig1 = CFSwapInt32LittleToHost(sig1);
     
@@ -32,7 +41,8 @@
     }
 
     // Reset the input stream back to the beginning of the file
-    [inputStream seek:0];
+//    [inputStream seek:0];
+    inputStream = [[DataInputStream alloc] initWithData:contents];
     
     KdbTree *tree = [reader load:inputStream withPassword:kdbPassword];
     

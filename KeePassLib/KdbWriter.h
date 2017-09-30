@@ -20,6 +20,8 @@
 #import "KdbPassword.h"
 
 @protocol KdbWriter<NSObject>
-- (void)persist:(KdbTree*)tree file:(NSString*)filename withPassword:(KdbPassword*)kdbPassword;
-- (void)newFile:(NSString*)fileName withPassword:(KdbPassword*)kdbPassword;
+//- (void)persist:(KdbTree*)tree file:(NSString*)filename withPassword:(KdbPassword*)kdbPassword;
+- (NSData*)persist:(KdbTree*)tree withPassword:(KdbPassword*)kdbPassword;
+//- (void)newFile:(NSString*)fileName withPassword:(KdbPassword*)kdbPassword;
+- (NSData*)newDatabase:(KdbPassword*)kdbPassword;
 @end

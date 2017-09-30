@@ -16,9 +16,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "KdbLib.h"
 
-@interface DatabaseDocument : NSObject
+@interface DatabaseDocument : UIDocument
 
 @property (nonatomic, strong) KdbTree *kdbTree;
 @property (nonatomic, copy) NSString *filename;
@@ -29,6 +30,7 @@
 /// @param keyFile Path to KeyFile
 /// @return A KeePass DatabaseDocument
 - (id)initWithFilename:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile;
+- (id)initWithURL:(NSURL *)url password:(NSString *)password keyFile:(NSString *)keyFile;
 
 /// Save the current KeePass DatabaseDocument
 - (void)save;

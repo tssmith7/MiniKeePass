@@ -21,7 +21,7 @@
 
 @implementation KdbWriterFactory
 
-+ (void)persist:(KdbTree*)tree file:(NSString*)filename withPassword:(KdbPassword*)kdbPassword {
++ (NSData*)encrypt:(KdbTree*)tree withPassword:(KdbPassword*)kdbPassword {
     id<KdbWriter> writer;
     
     if ([tree isKindOfClass:[Kdb3Tree class]]) {
@@ -31,8 +31,18 @@
     } else {
         @throw [NSException exceptionWithName:@"IllegalArgument" reason:@"KdbTree is not of a known type" userInfo:nil];
     }
+
+    return [writer persist:tree withPassword:kdbPassword];
+}
+
++ (void)persist:(KdbTree*)tree file:(NSString*)filename withPassword:(KdbPassword*)kdbPassword {
     
-    [writer persist:tree file:filename withPassword:kdbPassword];
+    NSData *fileContents = [KdbWriterFactory encrypt:tree withPassword:kdbPassword];
+
+    // Write to the file
+    if (![fileContents writeToFile:filename options:NSDataWritingFileProtectionComplete error:nil]) {
+        @throw [NSException exceptionWithName:@"IOError" reason:@"Failed to write file" userInfo:nil];
+    }
 }
 
 @end

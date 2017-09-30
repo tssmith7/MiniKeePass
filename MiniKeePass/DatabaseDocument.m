@@ -25,7 +25,13 @@
 @implementation DatabaseDocument
 
 - (id)initWithFilename:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile {
-    self = [super init];
+    NSURL *url = [NSURL fileURLWithPath:filename];
+
+    return [self initWithURL:url password:password keyFile:keyFile];
+}
+
+- (id)initWithURL:(NSURL *)url password:(NSString *)password keyFile:(NSString *)keyFile {
+    self = [super initWithFileURL:url];
     if (self) {
         if (password == nil && keyFile == nil) {
             @throw [NSException exceptionWithName:@"IllegalArgument"
@@ -33,20 +39,50 @@
                                          userInfo:nil];
         }
 
-        self.filename = filename;
-
+        self.filename = [url lastPathComponent];
+        
         NSStringEncoding passwordEncoding = [[AppSettings sharedInstance] passwordEncoding];
         self.kdbPassword = [[KdbPassword alloc] initWithPassword:password
                                                 passwordEncoding:passwordEncoding
                                                          keyFile:keyFile];
-
-        self.kdbTree = [KdbReaderFactory load:self.filename withPassword:self.kdbPassword];
     }
     return self;
 }
 
 - (void)save {
-    [KdbWriterFactory persist:self.kdbTree file:self.filename withPassword:self.kdbPassword];
+    // Use auto-saving
+    [self updateChangeCount:UIDocumentChangeDone];
+}
+
+- (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError * _Nullable *)outError {
+    NSData *fileData = (NSData*)contents;
+    @try {
+        self.kdbTree = [KdbReaderFactory decrypt:fileData withPassword:self.kdbPassword];
+    } @catch (NSException *exception) {
+        if (outError) {
+            *outError = [NSError errorWithDomain:exception.reason code:0 userInfo:nil];
+        }
+        return FALSE;
+    }
+    return TRUE;
+}
+
+- (id)contentsForType:(NSString *)typeName error:(NSError * _Nullable *)outError {
+    NSData *contents;
+    @try {
+        contents = [KdbWriterFactory encrypt:self.kdbTree withPassword:self.kdbPassword];
+    } @catch (NSException *exception) {
+        contents = nil;
+        if (outError) {
+            *outError = [NSError errorWithDomain:exception.reason code:0 userInfo:nil];
+        }
+    }
+    
+    return contents;
+}
+
+- (void)handleError:(NSError *)error userInteractionPermitted:(BOOL)userInteractionPermitted{
+    NSLog(@"UIDocument --> %@\n", error);
 }
 
 + (void)searchGroup:(KdbGroup *)group searchText:(NSString *)searchText results:(NSMutableArray *)results {
