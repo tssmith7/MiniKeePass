@@ -264,32 +264,40 @@ class FilesViewController: UITableViewController, NewDatabaseDelegate, UIDocumen
             databaseManager?.newDatabase(testURL, password: "test", version: 1)
              */
 //        }
-//        let UTIs = ["com.github.tssmith.MiniKeePass.kdb", "com.github.tssmith.MiniKeePass.kdbx"] as [String]
-        let UTIs = [/*kUTTypeJPEG, kUTTypeData, kUTTypeContent kUTTypeItem,*/ kUTTypeData] as [String]
-        
+        let kdbUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "kdb" as CFString, kUTTypeData)?.takeRetainedValue()
+        let kdbxUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "kdbx" as CFString, kUTTypeData)?.takeRetainedValue()
+        let UTIs = [kdbUTI, kdbxUTI] as! [String]
+//        let UTIs = [/*kUTTypeJPEG, kUTTypeData, kUTTypeContent kUTTypeItem,*/ kUTTypeData] as [String]
 //        let docDirURL = AppDelegate.documentsDirectoryUrl()
         
 //        let fileURL = AppDelegate.documentsDirectoryUrl()?.appendingPathComponent("localDB.kdbx")
         
 //        let docMenu = UIDocumentMenuViewController.init(url: fileURL!, in: UIDocumentPickerMode.exportToService)
-        let docMenu = UIDocumentMenuViewController.init(documentTypes: UTIs, in: UIDocumentPickerMode.open)
+//        let docMenu = UIDocumentMenuViewController.init(documentTypes: UTIs, in: UIDocumentPickerMode.open)
+        let docPick = UIDocumentPickerViewController.init(documentTypes: UTIs, in: UIDocumentPickerMode.open)
+        if #available(iOS 11.0, *) {
+            docPick.allowsMultipleSelection = false
+        }
         // maybe this should/could be kUTTypeItem and UIDocumentPickerModeImport,
         // but JPEG/Open ist the only way my Owncloud-Provider shows up in document menu.
         
-        docMenu.delegate = self
+ //       docMenu.delegate = self
+        docPick.delegate = self
 //        docPicker.modalInPopover = UIModalPresentationPopover
 //        docPicker.popoverPresentationController.barButtonItem = sender
-        self.present(docMenu, animated:true, completion:nil)
+        self.present(docPick, animated:true, completion:nil)
     }
 
-    @available(iOS 8.0, *)
     func documentMenu(_ documentMenu: UIDocumentMenuViewController,
                       didPickDocumentPicker docPicker: UIDocumentPickerViewController) {
         docPicker.delegate = self
         self.present(docPicker, animated:true, completion:nil)
     }
 
-    @available(iOS 8.0, *)
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        self.documentPicker(controller, didPickDocumentAt: urls[0])
+    }
+    
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         print("url is \(url.debugDescription)")
         let resourceKeys: Set = [URLResourceKey.isWritableKey, URLResourceKey.contentModificationDateKey]

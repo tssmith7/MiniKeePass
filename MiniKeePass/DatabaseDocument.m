@@ -24,12 +24,6 @@
 
 @implementation DatabaseDocument
 
-- (id)initWithFilename:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile {
-    NSURL *url = [NSURL fileURLWithPath:filename];
-
-    return [self initWithURL:url password:password keyFile:keyFile];
-}
-
 - (id)initWithURL:(NSURL *)url password:(NSString *)password keyFile:(NSString *)keyFile {
     self = [super initWithFileURL:url];
     if (self) {

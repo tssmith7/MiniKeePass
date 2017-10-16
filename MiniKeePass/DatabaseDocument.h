@@ -25,11 +25,10 @@
 @property (nonatomic, copy) NSString *filename;
 
 /// Create a KeePass Database
-/// @param filename Database filename
+/// @param url Database url
 /// @param password Database password
 /// @param keyFile Path to KeyFile
 /// @return A KeePass DatabaseDocument
-- (id)initWithFilename:(NSString *)filename password:(NSString *)password keyFile:(NSString *)keyFile;
 - (id)initWithURL:(NSURL *)url password:(NSString *)password keyFile:(NSString *)keyFile;
 
 /// Save the current KeePass DatabaseDocument
