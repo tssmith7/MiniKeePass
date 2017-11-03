@@ -17,7 +17,7 @@
 
 import UIKit
 
-class GroupViewController: UITableViewController, UISearchResultsUpdating {
+class GroupViewController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
     private enum Section : Int {
         case groups = 0
         case entries = 1
@@ -92,6 +92,8 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         searchController?.searchResultsUpdater = self
         searchController?.dimsBackgroundDuringPresentation = false
         searchController?.hidesNavigationBarDuringPresentation = false
+        searchController?.searchBar.scopeButtonTitles = ["All Fields", "Titles Only"]
+        searchController?.searchBar.delegate = self
         if #available(iOS 11.0, *) {
             navigationItem.searchController = searchController
             navigationItem.hidesSearchBarWhenScrolling = false
@@ -589,6 +591,24 @@ class GroupViewController: UITableViewController, UISearchResultsUpdating {
         // Find results
         let results = NSMutableArray()
         DatabaseDocument.search(parentGroup, searchText: searchController.searchBar.text, results: results)
+        searchResults = results as! [KdbEntry]
+        searchResults.sort {
+            $0.title().localizedCaseInsensitiveCompare($1.title()) == .orderedAscending
+        }
+        
+        // Update table
+        updateViewModel()
+        tableView.reloadData()
+    }
+    
+    // MARK: - UISearchBarDelegate
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        let appSettings = AppSettings.sharedInstance()
+        appSettings?.setSearchTitleOnly(selectedScope == 1)
+
+        // Find results
+        let results = NSMutableArray()
+        DatabaseDocument.search(parentGroup, searchText: searchBar.text, results: results)
         searchResults = results as! [KdbEntry]
         searchResults.sort {
             $0.title().localizedCaseInsensitiveCompare($1.title()) == .orderedAscending
